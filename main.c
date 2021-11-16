@@ -5,8 +5,8 @@
 void gotoxy(int x, int y);          //입력 위치 설정 함수
 void make_stage();                  //스테이지 구현 함수
 int getCommand();                   //키보드 입력 함수
-
-void startscr();                    //시작 화면 
+void gameover();                    //게임오버 화면
+void startscr();                    //시작 화면
 
 int main(void) {
 	startscr();
@@ -49,4 +49,13 @@ void startscr()
 	printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   ");
 	printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *     *    *  *        ");
 	printf("   ******   *    **   *       *  *    *  ******           ******  *       *  *     *    *  ******  \n");
+}
+
+void gameover() {
+	system("cls");
+	printf("        ******      *        **    **    ******            ****   *       *  ******   *****         ");
+	printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        ");
+	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         ");
+	printf("        *    *   *     *   *     *    *  *                *    *     * *     *        *    *        ");
+	printf("        ******  *       *  *     *    *  ******            ****       *      ******   *     *      \n");
 }
