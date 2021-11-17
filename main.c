@@ -2,9 +2,9 @@
 #include<windows.h>
 #include<conio.h>
 
-void gotoxy(int x, int y);          //입력 위치 설정 함수
-void make_stage();                  //스테이지 구현 함수
-int getCommand();                   //키보드 입력 함수
+void gotoxy(int x, int y);          //입력 위치 설정
+void make_stage();                  //스테이지 구현
+int getCommand();                   //키보드 입력
 void gameover();                    //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move();                  //뱀의 움직임
@@ -32,14 +32,14 @@ void make_stage() {
 		gotoxy(i, 17);
 		printf("#");
 	}
-};
+}
 
 int getCommand() {
 	if (_kbhit()) {
 		return _getch();
 	}
 	return -1;
-};
+}
 
 void startscr()
 {
@@ -53,6 +53,7 @@ void startscr()
 
 void gameover() {
 	system("cls");
+	printf("\n\n\n\n\n\n\n\n\n\n");
 	printf("        ******      *        **    **    ******            ****   *       *  ******   *****         ");
 	printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        ");
 	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         ");
@@ -62,52 +63,54 @@ void gameover() {
 
 void snake_move() {
 	int x = 9, y = 9;
-	char dir = 'a';
-	char input;
+	char dir = 'd';
+	char input = 'e';
 	gotoxy(x, y);
 	printf("*");
 	while (1) {
 		getCommand();
 		input = getCommand();
-		if (input == 'w') {
-			if (dir != 's') {
+		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
+			if (input == 'w') {
 				y = y - 1;
+				if (y == 1) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("*");
 				dir = 'w';
 			}
-			else
-				continue;
-		}
-		if (input == 'a') {
-			if (dir != 'd') {
+			if (input == 'a') {
 				x = x - 1;
+				if (x == 1) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("*");
 				dir = 'a';
 			}
-			else
-				continue;
-		}
-		if (input == 's') {
-			if (dir != 'w') {
+			if (input == 's') {
 				y = y + 1;
+				if (y == 17) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("*");
 				dir = 's';
 			}
-			else
-				continue;
-		}
-		if (input == 'd') {
-			if (dir != 'a') {
+			if (input == 'd') {
 				x = x + 1;
+				if (x == 17) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("*");
 				dir = 'd';
 			}
-			else
-				continue;
 		}
 		if (input == 'p') {
 			gameover();
