@@ -63,51 +63,111 @@ void gameover() {
 
 void snake_move() {
 	int x = 9, y = 9;
+	int x1 = 8, y1 = 9;
+	int x2 = 7, y2 = 9;
+	int x3 = 6, y3 = 9;
+	int x4 = 5, y4 = 9;
 	char dir = 'd';
 	char input = 'e';
 	gotoxy(x, y);
+	printf("a");
+	gotoxy(x1, y1);
+	printf("*");
+	gotoxy(x2, y2);
+	printf("*");
+	gotoxy(x3, y3);
+	printf("*");
+	gotoxy(x4, y4);
 	printf("*");
 	while (1) {
 		getCommand();
 		input = getCommand();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				y = y - 1;
 				if (y == 1) {
 					gameover();
 					break;
 				}
 				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
 				printf("*");
 				dir = 'w';
 			}
 			if (input == 'a') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x - 1;
 				if (x == 1) {
 					gameover();
 					break;
 				}
 				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
 				printf("*");
 				dir = 'a';
 			}
 			if (input == 's') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				y = y + 1;
 				if (y == 17) {
 					gameover();
 					break;
 				}
 				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
 				printf("*");
 				dir = 's';
 			}
 			if (input == 'd') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x + 1;
 				if (x == 17) {
 					gameover();
 					break;
 				}
 				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
 				printf("*");
 				dir = 'd';
 			}
