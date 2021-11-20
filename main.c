@@ -55,29 +55,35 @@ void rank_call() {
 void startscr()
 {
 	system("mode con cols=100 lines=40");
+start:
+	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
 	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
 	printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   \n");
 	printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *    **    *  *        \n");
 	printf("   ******   *    **   *       *  *    *  ******           ******  *       *  *    **    *  ******   \n");
-start:
 	printf("\npress s to start game\n");
 	printf("press r to see ranking\n");
 	printf("press x to exit\n:");
 	char input = getchar();
 	if (input == 's') {
 		while (getchar() != '\n');
+		system("cls");
 		make_stage();
 		snake_move();
 	}
 	else if (input == 'r') {
 		rank_call();
 		while (getchar() != '\n');
+		printf("press enter to continue...");
+		while (getchar() != '\n');
 		goto start;
 	}
 	else if (input == 'x') exit(0);
 	else {
-		printf("wrong input");
+		printf("wrong input\n");
+		while (getchar() != '\n');
+		printf("press enter to continue...");
 		while (getchar() != '\n');
 		goto start;
 	}
@@ -90,7 +96,7 @@ void gameover() {
 	printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        \n");
 	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         \n");
 	printf("        *    *   *     *   *    **    *  *                *    *     * *     *        *    *        \n");
-	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *       \n");
+	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
 }
 
 void snake_move() {
