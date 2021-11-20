@@ -11,8 +11,6 @@ void snake_move();                  //뱀의 움직임
 void rank_call();					//랭킹 표시
 int main(void) {
 	startscr();
-	make_stage();
-	snake_move();
 	return 0;
 }
 
