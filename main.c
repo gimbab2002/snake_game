@@ -8,7 +8,7 @@ int getCommand();                   //키보드 입력
 void gameover();                    //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move();                  //뱀의 움직임
-
+void rank_call();					//랭킹 표시
 int main(void) {
 	startscr();
 	make_stage();
@@ -41,23 +41,51 @@ int getCommand() {
 	return -1;
 }
 
+void rank_call() {
+	FILE* rank;
+	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
+	else {
+		fclose(rank);
+	}
+}
+
 void startscr()
 {
 	system("mode con cols=100 lines=40");
-	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   ");
-	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        ");
-	printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   ");
-	printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *     *    *  *        ");
+	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
+	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
+	printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   \n");
+	printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *     *    *  *        \n");
 	printf("   ******   *    **   *       *  *    *  ******           ******  *       *  *     *    *  ******  \n");
+start:
+	printf("\npress s to start game\n");
+	printf("press r to see ranking\n");
+	printf("press x to exit\n:");
+	char input = getchar();
+	if (input == 's') {
+		make_stage();
+		snake_move();
+	}
+	else if (input == 'r') {
+		rank_call();
+		getchar();
+		goto start;
+	}
+	else if (input == 'x') exit(0);
+	else {
+		printf("wrong input");
+		getchar();
+		goto start;
+	}
 }
 
 void gameover() {
 	system("cls");
 	printf("\n\n\n\n\n\n\n\n\n\n");
-	printf("        ******      *        **    **    ******            ****   *       *  ******   *****         ");
-	printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        ");
-	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         ");
-	printf("        *    *   *     *   *     *    *  *                *    *     * *     *        *    *        ");
+	printf("        ******      *        **    **    ******            ****   *       *  ******   *****         \n");
+	printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        \n");
+	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         \n");
+	printf("        *    *   *     *   *     *    *  *                *    *     * *     *        *    *        \n");
 	printf("        ******  *       *  *     *    *  ******            ****       *      ******   *     *      \n");
 }
 
