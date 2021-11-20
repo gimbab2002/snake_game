@@ -131,6 +131,10 @@ void snake_move() {
 					gameover();
 					break;
 				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("a");
 				gotoxy(x1, y1);
@@ -150,6 +154,10 @@ void snake_move() {
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x - 1;
 				if (x == 1) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
 					gameover();
 					break;
 				}
@@ -175,6 +183,10 @@ void snake_move() {
 					gameover();
 					break;
 				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("a");
 				gotoxy(x1, y1);
@@ -194,6 +206,10 @@ void snake_move() {
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x + 1;
 				if (x == 17) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
 					gameover();
 					break;
 				}
