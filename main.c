@@ -66,18 +66,19 @@ start:
 	printf("press x to exit\n:");
 	char input = getchar();
 	if (input == 's') {
+		while (getchar() != '\n');
 		make_stage();
 		snake_move();
 	}
 	else if (input == 'r') {
 		rank_call();
-		getchar();
+		while (getchar() != '\n');
 		goto start;
 	}
 	else if (input == 'x') exit(0);
 	else {
 		printf("wrong input");
-		getchar();
+		while (getchar() != '\n');
 		goto start;
 	}
 }
