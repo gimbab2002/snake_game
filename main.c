@@ -41,10 +41,15 @@ int getCommand() {
 
 void rank_call() {
 	FILE* rank;
+	char reading[100];
 	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
 	else {
+		printf("\n");
+		while ((fgets(reading, 100, rank) != NULL)) printf("%s", reading);
 		fclose(rank);
+		printf("\n");
 	}
+
 }
 
 void startscr()
