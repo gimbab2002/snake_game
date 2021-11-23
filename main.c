@@ -65,16 +65,14 @@ start:
 	printf("\npress s to start game\n");
 	printf("press r to see ranking\n");
 	printf("press x to exit\n:");
-	char input = getchar();
+	char input = _getch();
 	if (input == 's') {
-		while (getchar() != '\n');
 		system("cls");
 		make_stage();
 		snake_move();
 	}
 	else if (input == 'r') {
 		rank_call();
-		while (getchar() != '\n');
 		printf("press enter to continue...");
 		while (getchar() != '\n');
 		goto start;
@@ -82,7 +80,6 @@ start:
 	else if (input == 'x') exit(0);
 	else {
 		printf("wrong input\n");
-		while (getchar() != '\n');
 		printf("press enter to continue...");
 		while (getchar() != '\n');
 		goto start;
@@ -118,8 +115,7 @@ void snake_move() {
 	gotoxy(x4, y4);
 	printf("*");
 	while (1) {
-		getCommand();
-		input = getCommand();
+		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
 				gotoxy(x4, y4);
