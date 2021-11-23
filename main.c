@@ -9,6 +9,9 @@ void gameover();                    //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move();                  //뱀의 움직임
 void rank_call();					//랭킹 표시
+void rankrecord();                  //랭킹 기록
+void cursor(int i);             //커서 상태 변경
+
 int main(void) {
 	startscr();
 	return 0;
@@ -39,6 +42,13 @@ int getCommand() {
 	return -1;
 }
 
+void cursor(int i) {
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.dwSize = 1;
+	cursorInfo.bVisible = i;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
+
 void rank_call() {
 	FILE* rank;
 	char reading[100];
@@ -50,6 +60,18 @@ void rank_call() {
 		printf("\n");
 	}
 
+}
+
+void rankrecord() {
+	printf("\npress enter to proceed...\n");
+	while (getchar() != '\n');
+	printf("press r to record your ranking...");
+	char input = _getch();
+	if (input == 'r') {
+		FILE* rank;
+		fopen_s(&rank, "rank.txt", "a");
+		fclose(rank);
+	}
 }
 
 void startscr()
@@ -68,6 +90,7 @@ start:
 	char input = _getch();
 	if (input == 's') {
 		system("cls");
+		cursor(0);
 		make_stage();
 		snake_move();
 	}
@@ -94,6 +117,8 @@ void gameover() {
 	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         \n");
 	printf("        *    *   *     *   *    **    *  *                *    *     * *     *        *    *        \n");
 	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
+	cursor(1);
+	rankrecord();
 }
 
 void snake_move() {
