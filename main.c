@@ -2,6 +2,15 @@
 #include<windows.h>
 #include<conio.h>
 
+typedef struct RECORD {
+	char name[100];
+	int score;
+	int time;
+	int clear;
+}record; //이름, 점수, 시간, 클리어 여부(1 or 0)을 저장할 구조체
+
+record nowrec;
+
 void gotoxy(int x, int y);          //입력 위치 설정
 void make_stage();                  //스테이지 구현
 int getCommand();                   //키보드 입력
@@ -70,6 +79,10 @@ void rankrecord() {
 	if (input == 'r') {
 		FILE* rank;
 		fopen_s(&rank, "rank.txt", "a");
+		while (getchar() != '\n');
+		printf("enter your name: ");
+		gets_s(nowrec.name, sizeof(nowrec.name));
+		fprintf(rank, "%s %d %d %d\n", nowrec.name, nowrec.score, nowrec.time, nowrec.clear);
 		fclose(rank);
 	}
 }
