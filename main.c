@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<windows.h>
 #include<conio.h>
+#include<time.h>
+#include<stdlib.h>
 
 typedef struct RECORD {
 	char name[100];
@@ -20,6 +22,7 @@ void snake_move();                  //뱀의 움직임
 void rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
+void time_show();
 
 int main(void) {
 	startscr();
@@ -265,4 +268,33 @@ void snake_move() {
 			break;
 		}
 	}
+}
+void time_show() {   //아직 미완성(not completed) 
+	clock_t s, n;
+	s = clock();
+
+	while (1) {
+		while (1) {
+			n = clock();
+			printf("\r");               //커서 왼쪽 끝으로 이동(스테이지의 위치에 따라 수정할 예정)
+			printf("Time-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
+			if (_kbhit()) break; //키보드 입력이 들어오면 break;
+		}
+
+		if (_getch() == 'p') {          //만약 그것이 p이면
+			printf("\rTime-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
+			_getch();
+		}
+		else break;
+
+		s = s + (clock() - n);    
+		
+	}
+
+	printf("\rTime-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
+
+	_getch(); _getch();  
+	printf("\n\n\n");
+
+	return;
 }
