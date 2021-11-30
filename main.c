@@ -8,8 +8,7 @@ typedef struct RECORD {
 	char name[100];
 	int score;
 	int time;
-	int clear;
-}record; //이름, 점수, 시간, 클리어 여부(1 or 0)을 저장할 구조체
+}record; //이름, 점수, 시간을 저장할 구조체
 
 record nowrec;
 
@@ -85,7 +84,7 @@ void rankrecord() {
 		while (getchar() != '\n');
 		printf("enter your name: ");
 		gets_s(nowrec.name, sizeof(nowrec.name));
-		fprintf(rank, "%s %d %d %d\n", nowrec.name, nowrec.score, nowrec.time, nowrec.clear);
+		fprintf(rank, "%s %d %d\n", nowrec.name, nowrec.score, nowrec.time);
 		fclose(rank);
 	}
 }
@@ -287,13 +286,13 @@ void time_show() {   //아직 미완성(not completed)
 		}
 		else break;
 
-		s = s + (clock() - n);    
-		
+		s = s + (clock() - n);
+
 	}
 
 	printf("\rTime-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
 
-	_getch(); _getch();  
+	_getch(); _getch();
 	printf("\n\n\n");
 
 	return;
