@@ -76,12 +76,11 @@ void rank_call() {
 void rankrecord() {
 	printf("\npress enter to proceed...\n");
 	while (getchar() != '\n');
-	printf("press r to record your ranking...");
+	printf("press r to record your ranking...\n");
 	char input = _getch();
 	if (input == 'r') {
 		FILE* rank;
 		fopen_s(&rank, "rank.txt", "a");
-		while (getchar() != '\n');
 		printf("enter your name: ");
 		gets_s(nowrec.name, sizeof(nowrec.name));
 		fprintf(rank, "%s %d %d\n", nowrec.name, nowrec.score, nowrec.time);
@@ -134,6 +133,9 @@ void gameover() {
 	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
 	cursor(1);
 	rankrecord();
+	printf("press any key to back to title...");
+	_getch();
+	startscr();
 }
 
 void snake_move() {
