@@ -81,10 +81,24 @@ void rankrecord() {
 	if (input == 'r') {
 		FILE* rank;
 		fopen_s(&rank, "rank.txt", "a");
+	rerun:
 		printf("enter your name: ");
 		gets_s(nowrec.name, sizeof(nowrec.name));
+		if (strlen(nowrec.name) < 3) {
+			printf("name must be at least 3 words...\n\n");
+			goto rerun;
+		}
+		while (1) {
+			printf("your name is %s.\nyour score is %d.\nyour clear time is %d.\n\n", nowrec.name, nowrec.score, nowrec.time);
+			printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
+			input = _getch();
+			if (input == 'n') goto rerun;
+			else if (input == 'y') break;
+			else printf("wrong input\n\n");
+		}
 		fprintf(rank, "%s %d %d\n", nowrec.name, nowrec.score, nowrec.time);
 		fclose(rank);
+		printf("saved!\n");
 	}
 }
 
