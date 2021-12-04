@@ -3,25 +3,29 @@
 #include<conio.h>
 #include<time.h>
 #include<stdlib.h>
+#include<process.h>
 
 typedef struct RECORD {
 	char name[100];
 	int score;
-	int time;
+	int minute;
+	int sec;
 }record; //이름, 점수, 시간을 저장할 구조체
 
 record nowrec;
 
+int over = 0;
+
 void gotoxy(int x, int y);          //입력 위치 설정
 void make_stage();                  //스테이지 구현
 int getCommand();                   //키보드 입력
-void gameover();                    //게임오버 화면
+void gameover();            //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move();                  //뱀의 움직임
 void rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
-void time_show();
+void stopwatch();               //스톱워치 보여주기
 
 int main(void) {
 	startscr();
@@ -76,7 +80,7 @@ void rank_call() {
 void rankrecord() {
 	printf("\npress enter to proceed...\n");
 	while (getchar() != '\n');
-	printf("press r to record your ranking...\n");
+	printf("\n\n\n\n\n\npress r to record your ranking...\n");
 	char input = _getch();
 	if (input == 'r') {
 		FILE* rank;
@@ -89,14 +93,14 @@ void rankrecord() {
 			goto rerun;
 		}
 		while (1) {
-			printf("your name is %s.\nyour score is %d.\nyour clear time is %d.\n\n", nowrec.name, nowrec.score, nowrec.time);
+			printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
 			printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
 			input = _getch();
 			if (input == 'n') goto rerun;
 			else if (input == 'y') break;
 			else printf("wrong input\n\n");
 		}
-		fprintf(rank, "%s %d %d\n", nowrec.name, nowrec.score, nowrec.time);
+		fprintf(rank, "%s %d %d : %d\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
 		fclose(rank);
 		printf("saved!\n");
 	}
@@ -104,8 +108,10 @@ void rankrecord() {
 
 void startscr()
 {
+
 	system("mode con cols=100 lines=40");
 start:
+
 	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
 	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
@@ -120,7 +126,11 @@ start:
 		system("cls");
 		cursor(0);
 		make_stage();
-		snake_move();
+		HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+		Sleep(1);
+		HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+		WaitForSingleObject(thread2, INFINITE);
+
 	}
 	else if (input == 'r') {
 		rank_call();
@@ -138,6 +148,7 @@ start:
 }
 
 void gameover() {
+	over = 1;
 	system("cls");
 	printf("\n\n\n\n\n\n\n\n\n\n");
 	printf("        ******      *        **    **    ******            ****   *       *  ******   *****         \n");
@@ -284,32 +295,22 @@ void snake_move() {
 		}
 	}
 }
-void time_show() {   //아직 미완성(not completed) 
+void stopwatch() {
 	clock_t s, n;
 	s = clock();
-
 	while (1) {
-		while (1) {
-			n = clock();
-			printf("\r");               //커서 왼쪽 끝으로 이동(스테이지의 위치에 따라 수정할 예정)
-			printf("Time-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
-			if (_kbhit()) break; //키보드 입력이 들어오면 break;
+		n = clock();
+		cursor(0);
+		gotoxy(14, 0);
+		printf(" %d : %d", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60);
+		if (over == 1) {
+			break;
 		}
-
-		if (_getch() == 'p') {          //만약 그것이 p이면
-			printf("\rTime-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
-			_getch();
-		}
-		else break;
-
-		s = s + (clock() - n);
-
+		Sleep(1000);
 	}
-
-	printf("\rTime-\t %d : %d : %d ", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60, (n - s) % 1000);
-
-	_getch(); _getch();
-	printf("\n\n\n");
-
+	gotoxy(14, 0);
+	printf(" ****  ");
+	nowrec.minute = ((n - s) / 1000) / 60;
+	nowrec.sec = ((n - s) / 1000) % 60;
 	return;
 }
