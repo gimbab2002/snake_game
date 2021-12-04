@@ -4,14 +4,15 @@
 #include<time.h>
 #include<stdlib.h>
 #include<process.h>
-
+int height = 17, width = 17;  //dimensions of out field
 typedef struct RECORD {
 	char name[100];
 	int score;
 	int minute;
 	int sec;
 }record; //이름, 점수, 시간을 저장할 구조체
-
+int score;
+int fruitx, fruity;  // Global variables 선언
 record nowrec;
 
 int over = 0;
@@ -38,6 +39,24 @@ void gotoxy(int x, int y) {
 }
 
 void make_stage() {
+    score = 0;               //Drawing the snake in this function
+     int x = 9, y = 9;
+     int x1 = 8, y1 = 9;
+     int x2 = 7, y2 = 9;
+     int x3 = 6, y3 = 9;
+     int x4 = 5, y4 = 9;
+     char dir = 'd';
+     char input = 'e';
+     gotoxy(x, y);
+     printf("a");
+     gotoxy(x1, y1);
+     printf("*");
+     gotoxy(x2, y2);
+     printf("*");
+     gotoxy(x3, y3);
+     printf("*");
+     gotoxy(x4, y4);
+     printf("*");
 	for (int i = 1; i <= 17; i++) {
 		gotoxy(i, 1);
 		printf("#");
@@ -48,6 +67,10 @@ void make_stage() {
 		gotoxy(i, 17);
 		printf("#");
 	}
+    fruitx = 2 + rand() % 15;      // Drawing the fruit and make it appear in a random spot
+    fruity = 2 + rand() % 15;
+    gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
+    printf("@");
 }
 
 int getCommand() {
@@ -171,17 +194,17 @@ void snake_move() {
 	int x4 = 5, y4 = 9;
 	char dir = 'd';
 	char input = 'e';
-	gotoxy(x, y);
-	printf("a");
-	gotoxy(x1, y1);
-	printf("*");
-	gotoxy(x2, y2);
-	printf("*");
-	gotoxy(x3, y3);
-	printf("*");
-	gotoxy(x4, y4);
-	printf("*");
+                                  //Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
+        srand(time(NULL));
+              if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+                 fruitx = 2 + rand() % 15;
+                 fruity = 2 + rand() % 15;
+                 score += 1;
+                 gotoxy(fruitx, fruity);
+                 printf("@");
+
+    }
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
