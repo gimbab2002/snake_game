@@ -205,6 +205,7 @@ void startscr()
 
 	system("mode con cols=100 lines=40");
 start:
+
 	over = 0;
 	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
@@ -217,15 +218,48 @@ start:
 	printf("press x to exit\n:");
 	char input = _getch();
 	if (input == 's') {
-		Beep(F4, 500);
+	select:
 		system("cls");
-		cursor(0);
-		make_stage_low();
-		HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
-		Sleep(1);
-		HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
-		WaitForSingleObject(thread2, INFINITE);
-
+		printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
+		printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
+		printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   \n");
+		printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *    **    *  *        \n");
+		printf("   ******   *    **   *       *  *    *  ******           ******  *       *  *    **    *  ******   \n");
+		printf("\nselect the level\n\nhigh->press h\n\nmiddle->press m\n\nlow->press l\n");
+		char lev = _getch();
+		if (lev == 'h') {
+			system("cls");
+			cursor(0);
+			make_stage_high();
+			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			Sleep(1);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			WaitForSingleObject(thread2, INFINITE);
+		}
+		if (lev == 'm') {
+			system("cls");
+			cursor(0);
+			make_stage_mid();
+			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			Sleep(1);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			WaitForSingleObject(thread2, INFINITE);
+		}
+		if (lev == 'l') {
+			system("cls");
+			cursor(0);
+			make_stage_low();
+			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			Sleep(1);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			WaitForSingleObject(thread2, INFINITE);
+		}
+		else {
+			printf("wrong selection\n");
+			printf("press enter to continue...");
+			while (getchar() != '\n');
+			goto select;
+		}
 	}
 	else if (input == 'r') {
 		rank_call();
