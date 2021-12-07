@@ -27,7 +27,9 @@ record nowrec;
 int over = 0;
 
 void gotoxy(int x, int y);          //입력 위치 설정
-void make_stage();                  //스테이지 구현
+void make_stage_low();                  //스테이지하 구현
+void make_stage_mid();                  //스테이지중 구현
+void make_stage_high();                 //스테이지상 구현
 int getCommand();                   //키보드 입력
 void gameover();            //게임오버 화면
 void startscr();                    //시작 화면
@@ -47,15 +49,13 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void make_stage() {
+void make_stage_low() {
 	score = 0;               //Drawing the snake in this function
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
 	int x3 = 6, y3 = 9;
 	int x4 = 5, y4 = 9;
-	char dir = 'd';
-	char input = 'e';
 	gotoxy(x, y);
 	printf("a");
 	gotoxy(x1, y1);
@@ -80,6 +80,64 @@ void make_stage() {
 	fruity = 2 + rand() % 15;
 	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
 	printf("@");
+}
+
+void make_stage_mid() {
+	int x = 9, y = 9;
+	int x1 = 8, y1 = 9;
+	int x2 = 7, y2 = 9;
+	int x3 = 6, y3 = 9;
+	int x4 = 5, y4 = 9;
+	gotoxy(x, y);
+	printf("a");
+	gotoxy(x1, y1);
+	printf("*");
+	gotoxy(x2, y2);
+	printf("*");
+	gotoxy(x3, y3);
+	printf("*");
+	gotoxy(x4, y4);
+	printf("*");
+	for (int i = 1; i <= 17; i++) {
+		gotoxy(i, 12);
+		printf("#");
+	}
+	for (int i = 2, j = 11; i <= 9 && j >= 4; i++, j--) {
+		gotoxy(i, j);
+		printf("#");
+	}
+	for (int i = 16, j = 11; i >= 9 && j >= 4; i--, j--) {
+		gotoxy(i, j);
+		printf("#");
+	}
+}
+
+void make_stage_high() {
+	int x = 11, y = 9;
+	int x1 = 10, y1 = 9;
+	int x2 = 9, y2 = 9;
+	int x3 = 8, y3 = 9;
+	int x4 = 7, y4 = 9;
+	gotoxy(x, y);
+	printf("a");
+	gotoxy(x1, y1);
+	printf("*");
+	gotoxy(x2, y2);
+	printf("*");
+	gotoxy(x3, y3);
+	printf("*");
+	gotoxy(x4, y4);
+	printf("*");
+	for (int i = 6; i <= 12; i++) {
+		gotoxy(i, 6);
+		printf("#");
+		gotoxy(6, i);
+		printf("#");
+		gotoxy(12, i);
+		printf("#");
+		gotoxy(i, 12);
+		printf("#");
+	}
 }
 
 int getCommand() {
@@ -162,7 +220,7 @@ start:
 		Beep(F4, 500);
 		system("cls");
 		cursor(0);
-		make_stage();
+		make_stage_low();
 		HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 		Sleep(1);
 		HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
