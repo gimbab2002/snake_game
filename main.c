@@ -347,6 +347,7 @@ void stopwatch() {
 		Sleep(1000);
 	}
 	gotoxy(14, 0);
+	printf(" **** ");
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
 	return;
