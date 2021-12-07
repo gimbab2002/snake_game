@@ -295,6 +295,8 @@ void gameover() {
 }
 
 void snake_move_low() {
+    score = 0;
+    int last = time(NULL);
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -302,15 +304,32 @@ void snake_move_low() {
 	int x4 = 5, y4 = 9;
 	char dir = 'd';
 	char input = 'e';
+    gotoxy(-1, -1);
+    printf("score = %d", score);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
-		if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+		if (x == fruitx && y == fruity) {
+            int cur = time(NULL);
+                        if (cur - last <= 0.5) {
+                            score *= 2;
+                        }
+                        else if (cur - last <= 1) {
+                            score += 20;
+                        }
+                        else if (cur - last <= 1.5) {
+                            score += 15;
+                        }
+                        else {
+                            score += 10;
+                        }
+                        time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
 			fruitx = 2 + rand() % 15;
 			fruity = 2 + rand() % 15;
-			score += 1;
 			gotoxy(fruitx, fruity);
 			printf("@");
+            gotoxy(-1, -1);
+            printf("score = %d", score);
 
 		}
 		input = _getch();
