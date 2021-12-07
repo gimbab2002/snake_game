@@ -4,6 +4,15 @@
 #include<time.h>
 #include<stdlib.h>
 #include<process.h>
+#define A3 220.0000
+#define B3 246.9417
+#define C4 261.6256
+#define D4 293.6648
+#define E4 329.6276
+#define F4 349.2282
+#define G4 391.9954
+
+
 int height = 17, width = 17;  //dimensions of out field
 typedef struct RECORD {
 	char name[100];
@@ -39,24 +48,24 @@ void gotoxy(int x, int y) {
 }
 
 void make_stage() {
-    score = 0;               //Drawing the snake in this function
-     int x = 9, y = 9;
-     int x1 = 8, y1 = 9;
-     int x2 = 7, y2 = 9;
-     int x3 = 6, y3 = 9;
-     int x4 = 5, y4 = 9;
-     char dir = 'd';
-     char input = 'e';
-     gotoxy(x, y);
-     printf("a");
-     gotoxy(x1, y1);
-     printf("*");
-     gotoxy(x2, y2);
-     printf("*");
-     gotoxy(x3, y3);
-     printf("*");
-     gotoxy(x4, y4);
-     printf("*");
+	score = 0;               //Drawing the snake in this function
+	int x = 9, y = 9;
+	int x1 = 8, y1 = 9;
+	int x2 = 7, y2 = 9;
+	int x3 = 6, y3 = 9;
+	int x4 = 5, y4 = 9;
+	char dir = 'd';
+	char input = 'e';
+	gotoxy(x, y);
+	printf("a");
+	gotoxy(x1, y1);
+	printf("*");
+	gotoxy(x2, y2);
+	printf("*");
+	gotoxy(x3, y3);
+	printf("*");
+	gotoxy(x4, y4);
+	printf("*");
 	for (int i = 1; i <= 17; i++) {
 		gotoxy(i, 1);
 		printf("#");
@@ -67,10 +76,10 @@ void make_stage() {
 		gotoxy(i, 17);
 		printf("#");
 	}
-    fruitx = 2 + rand() % 15;      // Drawing the fruit and make it appear in a random spot
-    fruity = 2 + rand() % 15;
-    gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
-    printf("@");
+	fruitx = 2 + rand() % 15;      // Drawing the fruit and make it appear in a random spot
+	fruity = 2 + rand() % 15;
+	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
+	printf("@");
 }
 
 int getCommand() {
@@ -89,11 +98,15 @@ void cursor(int i) {
 
 void rank_call() {
 	FILE* rank;
-	char reading[100];
+	record reading;
 	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
 	else {
 		printf("\n");
-		while ((fgets(reading, 100, rank) != NULL)) printf("%s", reading);
+		/* 정렬 하고 나서
+			아직 미구현  */
+
+		while (fscanf_s(rank, "%s %d %d : %d\n", reading.name, sizeof(reading.name), &reading.score, &reading.minute, &reading.sec) != EOF)
+			printf("%s %d %d : %d\n", reading.name, reading.score, reading.minute, reading.sec);
 		fclose(rank);
 		printf("\n");
 	}
@@ -134,7 +147,6 @@ void startscr()
 
 	system("mode con cols=100 lines=40");
 start:
-
 	over = 0;
 	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
@@ -147,6 +159,7 @@ start:
 	printf("press x to exit\n:");
 	char input = _getch();
 	if (input == 's') {
+		Beep(F4, 500);
 		system("cls");
 		cursor(0);
 		make_stage();
@@ -172,6 +185,7 @@ start:
 }
 
 void gameover() {
+	Beep(A3, 500);
 	over = 1;
 	system("cls");
 	printf("\n\n\n\n\n\n\n\n\n\n");
@@ -195,17 +209,17 @@ void snake_move() {
 	int x4 = 5, y4 = 9;
 	char dir = 'd';
 	char input = 'e';
-                                  //Deleted the drawing since it's already drawn in the make_stage function
+	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
-        srand(time(NULL));
-              if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-                 fruitx = 2 + rand() % 15;
-                 fruity = 2 + rand() % 15;
-                 score += 1;
-                 gotoxy(fruitx, fruity);
-                 printf("@");
+		srand(time(NULL));
+		if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			fruitx = 2 + rand() % 15;
+			fruity = 2 + rand() % 15;
+			score += 1;
+			gotoxy(fruitx, fruity);
+			printf("@");
 
-    }
+		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
@@ -333,7 +347,6 @@ void stopwatch() {
 		Sleep(1000);
 	}
 	gotoxy(14, 0);
-	printf(" ****  ");
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
 	return;
