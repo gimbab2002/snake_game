@@ -135,6 +135,7 @@ void startscr()
 	system("mode con cols=100 lines=40");
 start:
 
+	over = 0;
 	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
 	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
