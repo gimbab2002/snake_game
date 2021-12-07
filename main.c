@@ -33,7 +33,8 @@ void make_stage_high();                 //스테이지상 구현
 int getCommand();                   //키보드 입력
 void gameover();            //게임오버 화면
 void startscr();                    //시작 화면
-void snake_move();                  //뱀의 움직임
+void snake_move_low();                  //뱀의 움직임
+void snake_move_high();                 //뱀의 움직임
 void rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
@@ -233,7 +234,7 @@ start:
 			make_stage_high();
 			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_high, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'm') {
@@ -242,7 +243,7 @@ start:
 			make_stage_mid();
 			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'l') {
@@ -251,7 +252,7 @@ start:
 			make_stage_low();
 			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move, NULL, 0, NULL);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		else {
@@ -293,7 +294,7 @@ void gameover() {
 	startscr();
 }
 
-void snake_move() {
+void snake_move_low() {
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -419,12 +420,138 @@ void snake_move() {
 				dir = 'd';
 			}
 		}
-		if (input == 'p') {
-			gameover();
-			break;
+	}
+}
+
+void snake_move_high() {
+	int x = 11, y = 9;
+	int x1 = 10, y1 = 9;
+	int x2 = 9, y2 = 9;
+	int x3 = 8, y3 = 9;
+	int x4 = 7, y4 = 9;
+	char dir = 'd';
+	char input = 'e';
+	//Deleted the drawing since it's already drawn in the make_stage function
+	while (1) {
+		srand(time(NULL));
+		if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			fruitx = 2 + rand() % 15;
+			fruity = 2 + rand() % 15;
+			score += 1;
+			gotoxy(fruitx, fruity);
+			printf("@");
+
+		}
+		input = _getch();
+		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
+			if (input == 'w') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				y = y - 1;
+				if (y == 6) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'w';
+			}
+			if (input == 'a') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				x = x - 1;
+				if (x == 6) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'a';
+			}
+			if (input == 's') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				y = y + 1;
+				if (y == 12) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 's';
+			}
+			if (input == 'd') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				x = x + 1;
+				if (x == 12) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'd';
+			}
 		}
 	}
 }
+
 void stopwatch() {
 	clock_t s, n;
 	s = clock();
