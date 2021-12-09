@@ -34,11 +34,13 @@ int getCommand();                   //키보드 입력
 void gameover();            //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move_low();                  //뱀의 움직임
+void snake_move_mid();                  //뱀의 움직임
 void snake_move_high();                 //뱀의 움직임
 void rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
 void stopwatch();               //스톱워치 보여주기
+void wall();                //장애물
 
 int main(void) {
 	startscr();
@@ -48,6 +50,11 @@ int main(void) {
 void gotoxy(int x, int y) {
 	COORD pos = { 30 + x * 2, 10 + y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+void wall(int x, int y) {
+	gotoxy(x, y);
+	printf("#");
 }
 
 void make_stage_low() {
@@ -118,17 +125,19 @@ void make_stage_mid() {
 	gotoxy(x4, y4);
 	printf("*");
 	for (int i = 1; i <= 17; i++) {
-		gotoxy(i, 12);
+		gotoxy(i, 1);
+		printf("#");
+		gotoxy(1, i);
+		printf("#");
+		gotoxy(17, i);
+		printf("#");
+		gotoxy(i, 17);
 		printf("#");
 	}
-	for (int i = 2, j = 11; i <= 9 && j >= 4; i++, j--) {
-		gotoxy(i, j);
-		printf("#");
-	}
-	for (int i = 16, j = 11; i >= 9 && j >= 4; i--, j--) {
-		gotoxy(i, j);
-		printf("#");
-	}
+	wall(3, 3); wall(4, 3); wall(5, 3); wall(5, 4); wall(5, 4); wall(5, 5); wall(4, 8); wall(4, 9); wall(4, 10); wall(4, 11); wall(5, 10);
+	wall(6, 10); wall(7, 10); wall(8, 4); wall(8, 5); wall(8, 6); wall(8, 7); wall(9, 4); wall(10, 4); wall(11, 4); wall(12, 4); wall(7, 14);
+	wall(8, 14); wall(9, 14); wall(10, 14); wall(11, 14); wall(12, 14); wall(11, 13); wall(11, 12); wall(11, 11); wall(11, 10); wall(11, 9);
+	wall(14, 6); wall(14, 7); wall(14, 8); wall(14, 9); wall(14, 10);
 }
 
 void make_stage_high() {
@@ -261,7 +270,7 @@ start:
 			make_stage_mid();
 			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
+			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'l') {
@@ -468,6 +477,191 @@ void snake_move_low() {
 				}
 				if ((x == 4 && y == 4) || (x == 4 && y == 5) || (x == 5 && y == 10) || (x == 5 && y == 11) || (x == 5 && y == 12) ||
 					(x == 9 && y == 5) || (x == 9 && y == 6) || (x == 11 && y == 13) || (x == 11 && y == 14)) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'd';
+			}
+		}
+	}
+}
+
+void snake_move_mid() {
+	score = 0;
+	int last = time(NULL);
+	int x = 9, y = 9;
+	int x1 = 8, y1 = 9;
+	int x2 = 7, y2 = 9;
+	int x3 = 6, y3 = 9;
+	int x4 = 5, y4 = 9;
+	char dir = 'd';
+	char input = 'e';
+	gotoxy(-1, -1);
+	printf("score = %d", score);
+	//Deleted the drawing since it's already drawn in the make_stage function
+	while (1) {
+		srand(time(NULL));
+		if (x == fruitx && y == fruity) {
+			int cur = time(NULL);
+			if (cur - last <= 0.5) {
+				score *= 2;
+			}
+			else if (cur - last <= 1) {
+				score += 20;
+			}
+			else if (cur - last <= 1.5) {
+				score += 15;
+			}
+			else {
+				score += 10;
+			}
+			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			fruitx = 2 + rand() % 15;
+			fruity = 2 + rand() % 15;
+			gotoxy(fruitx, fruity);
+			printf("@");
+			gotoxy(-1, -1);
+			printf("score = %d", score);
+
+		}
+		if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
+			fruitx = 2 + rand() % 15;
+			fruity = 2 + rand() % 15;
+			gotoxy(fruitx, fruity);
+			printf("@");
+			gotoxy(-1, -1);
+		}
+		input = _getch();
+		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
+			if (input == 'w') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				y = y - 1;
+				if (y == 1) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 3) || (x == 4 && y == 3) || (x == 5 && y == 5) || (x == 8 && y == 7) || (x == 9 && y == 4) ||
+					(x == 10 && y == 4) || (x == 11 && y == 4) || (x == 12 && y == 4) || (x == 4 && y == 11) || (x == 5 && y == 10) ||
+					(x == 6 && y == 10) || (x == 7 && y == 10) || (x == 7 && y == 14) || (x == 8 && y == 14) || (x == 9 && y == 14) ||
+					(x == 10 && y == 14) || (x == 11 && y == 14) || (x == 12 && y == 14) || (x == 14 && y == 10)) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'w';
+			}
+			if (input == 'a') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				x = x - 1;
+				if (x == 1) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 5 && y == 3) || (x == 5 && y == 4) || (x == 5 && y == 5) || (x == 12 && y == 4) || (x == 8 && y == 5) ||
+					(x == 8 && y == 6) || (x == 8 && y == 7) || (x == 14 && y == 6) || (x == 14 && y == 7) || (x == 14 && y == 8) ||
+					(x == 14 && y == 9) || (x == 14 && y == 10) || (x == 4 && y == 8) || (x == 4 && y == 9) || (x == 7 && y == 10) ||
+					(x == 4 && y == 11) || (x == 11 && y == 9) || (x == 11 && y == 10) || (x == 11 && y == 11) || (x == 11 && y == 12) ||
+					(x == 11 && y == 13) || (x == 12 && y == 14)) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 'a';
+			}
+			if (input == 's') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				y = y + 1;
+				if (y == 17) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 3) || (x == 4 && y == 3) || (x == 5 && y == 3) || (x == 8 && y == 4) || (x == 9 && y == 4) ||
+					(x == 10 && y == 4) || (x == 11 && y == 4) || (x == 12 && y == 4) || (x == 4 && y == 8) || (x == 5 && y == 10) ||
+					(x == 6 && y == 10) || (x == 7 && y == 10) || (x == 14 && y == 6) || (x == 7 && y == 14) || (x == 8 && y == 14) ||
+					(x == 9 && y == 14) || (x == 10 && y == 14) || (x == 11 && y == 9) || (x == 12 && y == 14)) {
+					gameover();
+					break;
+				}
+				gotoxy(x, y);
+				printf("a");
+				gotoxy(x1, y1);
+				printf("*");
+				gotoxy(x2, y2);
+				printf("*");
+				gotoxy(x3, y3);
+				printf("*");
+				gotoxy(x4, y4);
+				printf("*");
+				dir = 's';
+			}
+			if (input == 'd') {
+				gotoxy(x4, y4);
+				printf(" ");
+				x4 = x3; x3 = x2; x2 = x1; x1 = x;
+				y4 = y3; y3 = y2; y2 = y1; y1 = y;
+				x = x + 1;
+				if (x == 17) {
+					gameover();
+					break;
+				}
+				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 3) || (x == 5 && y == 4) || (x == 5 && y == 5) || (x == 8 && y == 4) || (x == 8 && y == 5) ||
+					(x == 8 && y == 6) || (x == 8 && y == 7) || (x == 14 && y == 6) || (x == 14 && y == 7) || (x == 14 && y == 8) ||
+					(x == 14 && y == 9) || (x == 14 && y == 10) || (x == 4 && y == 8) || (x == 4 && y == 9) || (x == 4 && y == 10) ||
+					(x == 4 && y == 11) || (x == 11 && y == 9) || (x == 11 && y == 10) || (x == 11 && y == 11) || (x == 11 && y == 12) ||
+					(x == 11 && y == 13) || (x == 7 && y == 14)) {
 					gameover();
 					break;
 				}
