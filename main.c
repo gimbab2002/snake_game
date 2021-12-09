@@ -332,6 +332,13 @@ void snake_move_low() {
             printf("score = %d", score);
 
 		}
+        if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
+                 fruitx = 2 + rand() % 15;
+                 fruity = 2 + rand() % 15;
+                 gotoxy(fruitx, fruity);
+                 printf("@");
+                 gotoxy(-1, -1);
+              }
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
