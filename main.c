@@ -77,6 +77,24 @@ void make_stage_low() {
 		gotoxy(i, 17);
 		printf("#");
 	}
+	gotoxy(4, 4);
+	printf("# #");
+	gotoxy(4, 5);
+	printf("# #");
+	gotoxy(5, 10);
+	printf("# #");
+	gotoxy(5, 11);
+	printf("# #");
+	gotoxy(5, 12);
+	printf("# #");
+	gotoxy(9, 5);
+	printf("# # #");
+	gotoxy(9, 6);
+	printf("# # #");
+	gotoxy(11, 13);
+	printf("# # #");
+	gotoxy(11, 14);
+	printf("# # #");
 	fruitx = 2 + rand() % 15;      // Drawing the fruit and make it appear in a random spot
 	fruity = 2 + rand() % 15;
 	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
@@ -295,8 +313,8 @@ void gameover() {
 }
 
 void snake_move_low() {
-    score = 0;
-    int last = time(NULL);
+	score = 0;
+	int last = time(NULL);
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -304,41 +322,41 @@ void snake_move_low() {
 	int x4 = 5, y4 = 9;
 	char dir = 'd';
 	char input = 'e';
-    gotoxy(-1, -1);
-    printf("score = %d", score);
+	gotoxy(-1, -1);
+	printf("score = %d", score);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
 		if (x == fruitx && y == fruity) {
-            int cur = time(NULL);
-                        if (cur - last <= 0.5) {
-                            score *= 2;
-                        }
-                        else if (cur - last <= 1) {
-                            score += 20;
-                        }
-                        else if (cur - last <= 1.5) {
-                            score += 15;
-                        }
-                        else {
-                            score += 10;
-                        }
-                        time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			int cur = time(NULL);
+			if (cur - last <= 0.5) {
+				score *= 2;
+			}
+			else if (cur - last <= 1) {
+				score += 20;
+			}
+			else if (cur - last <= 1.5) {
+				score += 15;
+			}
+			else {
+				score += 10;
+			}
+			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
 			fruitx = 2 + rand() % 15;
 			fruity = 2 + rand() % 15;
 			gotoxy(fruitx, fruity);
 			printf("@");
-            gotoxy(-1, -1);
-            printf("score = %d", score);
+			gotoxy(-1, -1);
+			printf("score = %d", score);
 
 		}
-        if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
-                 fruitx = 2 + rand() % 15;
-                 fruity = 2 + rand() % 15;
-                 gotoxy(fruitx, fruity);
-                 printf("@");
-                 gotoxy(-1, -1);
-              }
+		if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
+			fruitx = 2 + rand() % 15;
+			fruity = 2 + rand() % 15;
+			gotoxy(fruitx, fruity);
+			printf("@");
+			gotoxy(-1, -1);
+		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
@@ -352,6 +370,11 @@ void snake_move_low() {
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 4 && y == 5) || (x == 5 && y == 5) || (x == 5 && y == 12) || (x == 6 && y == 12) || (x == 9 && y == 6) ||
+					(x == 10 && y == 6) || (x == 11 && y == 14) || (x == 12 && y == 14) || (x == 13 && y == 14)) {
 					gameover();
 					break;
 				}
@@ -381,6 +404,11 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				if ((x == 5 && y == 4) || (x == 5 && y == 5) || (x == 6 && y == 10) || (x == 6 && y == 11) || (x == 6 && y == 12) ||
+					(x == 10 && y == 5) || (x == 10 && y == 6) || (x == 13 && y == 13) || (x == 13 && y == 14)) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("a");
 				gotoxy(x1, y1);
@@ -407,6 +435,11 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				if ((x == 4 && y == 4) || (x == 5 && y == 4) || (x == 5 && y == 10) || (x == 6 && y == 11) || (x == 9 && y == 5) ||
+					(x == 10 && y == 5) || (x == 11 && y == 13) || (x == 12 && y == 13) || (x == 13 && y == 13)) {
+					gameover();
+					break;
+				}
 				gotoxy(x, y);
 				printf("a");
 				gotoxy(x1, y1);
@@ -430,6 +463,11 @@ void snake_move_low() {
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 4 && y == 4) || (x == 4 && y == 5) || (x == 5 && y == 10) || (x == 5 && y == 11) || (x == 5 && y == 12) ||
+					(x == 9 && y == 5) || (x == 9 && y == 6) || (x == 11 && y == 13) || (x == 11 && y == 14)) {
 					gameover();
 					break;
 				}
