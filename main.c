@@ -22,8 +22,8 @@ typedef struct RECORD {
 	int sec;
 }record; //이름, 점수, 시간을 저장할 구조체
 typedef struct Coord {
-    int x;
-    int y;
+	int x;
+	int y;
 }Coord;
 int score;
 int fruitx, fruity;  // Global variables 선언
@@ -31,43 +31,105 @@ record nowrec;
 
 int over = 0;
 const Coord WALLS[] = {
-    {.x = 3, .y = 3},
-    {.x = 4, .y = 3},
-    {.x = 5, .y = 3},
-    {.x = 5, .y = 4},
-    {.x = 5, .y = 4},
-    {.x = 5, .y = 5},
-    {.x = 4, .y = 8},
-    {.x = 4, .y = 9},
-    {.x = 4, .y = 10},
-    {.x = 4, .y = 11},
-    {.x = 5, .y = 10},
-    {.x = 6, .y = 10},
-    {.x = 7, .y = 10},
-    {.x = 8, .y = 4},
-    {.x = 8, .y = 5},
-    {.x = 8, .y = 6},
-    {.x = 8, .y = 7},
-    {.x = 9, .y = 4},
-    {.x = 10, .y = 4},
-    {.x = 11, .y = 4},
-    {.x = 12, .y = 4},
-    {.x = 7, .y = 14},
-    {.x = 8, .y = 14},
-    {.x = 9, .y = 14},
-    {.x = 10, .y = 14},
-    {.x = 11, .y = 14},
-    {.x = 12, .y = 14},
-    {.x = 11, .y = 13},
-    {.x = 11, .y = 12},
-    {.x = 11, .y = 11},
-    {.x = 11, .y = 10},
-    {.x = 11, .y = 9},
-    {.x = 14, .y = 6},
-    {.x = 14, .y = 7},
-    {.x = 14, .y = 8},
-    {.x = 14, .y = 9},
-    {.x = 14, .y = 10}
+	{.x = 3, .y = 3},
+	{.x = 4, .y = 3},
+	{.x = 5, .y = 3},
+	{.x = 5, .y = 4},
+	{.x = 5, .y = 4},
+	{.x = 5, .y = 5},
+	{.x = 4, .y = 8},
+	{.x = 4, .y = 9},
+	{.x = 4, .y = 10},
+	{.x = 4, .y = 11},
+	{.x = 5, .y = 10},
+	{.x = 6, .y = 10},
+	{.x = 7, .y = 10},
+	{.x = 8, .y = 4},
+	{.x = 8, .y = 5},
+	{.x = 8, .y = 6},
+	{.x = 8, .y = 7},
+	{.x = 9, .y = 4},
+	{.x = 10, .y = 4},
+	{.x = 11, .y = 4},
+	{.x = 12, .y = 4},
+	{.x = 7, .y = 14},
+	{.x = 8, .y = 14},
+	{.x = 9, .y = 14},
+	{.x = 10, .y = 14},
+	{.x = 11, .y = 14},
+	{.x = 12, .y = 14},
+	{.x = 11, .y = 13},
+	{.x = 11, .y = 12},
+	{.x = 11, .y = 11},
+	{.x = 11, .y = 10},
+	{.x = 11, .y = 9},
+	{.x = 14, .y = 6},
+	{.x = 14, .y = 7},
+	{.x = 14, .y = 8},
+	{.x = 14, .y = 9},
+	{.x = 14, .y = 10}
+};
+const Coord WALLS1[] = {    //60개
+	{.x = 3, .y = 3},
+	{.x = 4, .y = 3},
+	{.x = 3, .y = 4},
+	{.x = 2, .y = 6},
+	{.x = 7, .y = 2},
+	{.x = 8, .y = 2},
+	{.x = 9, .y = 2},
+	{.x = 10, .y = 2},
+	{.x = 11, .y = 2},
+	{.x = 12, .y = 2},
+	{.x = 8, .y = 3},
+	{.x = 5, .y = 5},
+	{.x = 4, .y = 6},
+	{.x = 5, .y = 6},
+	{.x = 4, .y = 7},
+	{.x = 8, .y = 6},
+	{.x = 9, .y = 6},
+	{.x = 10, .y = 6},
+	{.x = 11, .y = 6},
+	{.x = 11, .y = 5},
+	{.x = 11, .y = 7},
+	{.x = 14, .y = 4},
+	{.x = 14, .y = 5},
+	{.x = 14, .y = 6},
+	{.x = 15, .y = 6},
+	{.x = 3, .y = 9},
+	{.x = 3, .y = 10},
+	{.x = 6, .y = 9},
+	{.x = 7, .y = 9},
+	{.x = 8, .y = 9},
+	{.x = 9, .y = 9},
+	{.x = 3, .y = 12},
+	{.x = 4, .y = 12},
+	{.x = 5, .y = 12},
+	{.x = 6, .y = 12},
+	{.x = 4, .y = 13},
+	{.x = 4, .y = 14},
+	{.x = 9, .y = 11},
+	{.x = 10, .y = 11},
+	{.x = 11, .y = 11},
+	{.x = 12, .y = 11},
+	{.x = 13, .y = 11},
+	{.x = 12, .y = 10},
+	{.x = 15, .y = 9},
+	{.x = 15, .y = 10},
+	{.x = 15, .y = 11},
+	{.x = 15, .y = 12},
+	{.x = 9, .y = 13},
+	{.x = 2, .y = 15},
+	{.x = 2, .y = 16},
+	{.x = 7, .y = 15},
+	{.x = 8, .y = 15},
+	{.x = 9, .y = 15},
+	{.x = 12, .y = 13},
+	{.x = 12, .y = 14},
+	{.x = 12, .y = 15},
+	{.x = 14, .y = 14},
+	{.x = 15, .y = 14},
+	{.x = 16, .y = 14},
+	{.x = 5, .y = 16},
 };
 void gotoxy(int x, int y);          //입력 위치 설정
 void make_stage_low();                  //스테이지하 구현
@@ -93,27 +155,27 @@ int main(void) {
 
 bool isWall(Coord coord)
 {
-    for (int i = 0; i < sizeof(WALLS) / sizeof(Coord); i++)
-    {
-        if (coord.x == WALLS[i].x && coord.y == WALLS[i].y)
-        {
-            return 1;
-        }
-    }
-    return 0;
+	for (int i = 0; i < sizeof(WALLS) / sizeof(Coord); i++)
+	{
+		if (coord.x == WALLS[i].x && coord.y == WALLS[i].y)
+		{
+			return 1;
+		}
+	}
+	return 0;
 }
 Coord fruit() {
-    // generates a fruit coordinates that are not on the walls
-    srand(time(NULL));
-    while (1)
-    {
-        Coord fruitXY = { 2 + rand() % 15, 2 + rand() % 15 };
-        if (!isWall(fruitXY))
-        {
-            return fruitXY;
+	// generates a fruit coordinates that are not on the walls
+	srand(time(NULL));
+	while (1)
+	{
+		Coord fruitXY = { 2 + rand() % 15, 2 + rand() % 15 };
+		if (!isWall(fruitXY))
+		{
+			return fruitXY;
 
-        }
-    }
+		}
+	}
 }
 
 void gotoxy(int x, int y) {
@@ -203,24 +265,24 @@ void make_stage_mid() {
 		gotoxy(i, 17);
 		printf("#");
 	}
-    for (int i = 0; i < 37; i++)
-    {
-        Coord awall = WALLS[i];
-        wall(awall.x, awall.y);
-    }
-    Coord fruitxy = fruit();
-    fruity = fruitxy.y;
-    fruitx = fruitxy.x;
-    gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
-    printf("@");
+	for (int i = 0; i < 37; i++)
+	{
+		Coord awall = WALLS[i];
+		wall(awall.x, awall.y);
+	}
+	Coord fruitxy = fruit();
+	fruity = fruitxy.y;
+	fruitx = fruitxy.x;
+	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
+	printf("@");
 }
 
 void make_stage_high() {
-	int x = 11, y = 9;
-	int x1 = 10, y1 = 9;
-	int x2 = 9, y2 = 9;
-	int x3 = 8, y3 = 9;
-	int x4 = 7, y4 = 9;
+	int x = 11, y = 8;
+	int x1 = 10, y1 = 8;
+	int x2 = 9, y2 = 8;
+	int x3 = 8, y3 = 8;
+	int x4 = 7, y4 = 8;
 	gotoxy(x, y);
 	printf("a");
 	gotoxy(x1, y1);
@@ -231,16 +293,22 @@ void make_stage_high() {
 	printf("*");
 	gotoxy(x4, y4);
 	printf("*");
-	for (int i = 6; i <= 12; i++) {
-		gotoxy(i, 6);
+	for (int i = 1; i <= 17; i++) {
+		gotoxy(i, 1);
 		printf("#");
-		gotoxy(6, i);
+		gotoxy(1, i);
 		printf("#");
-		gotoxy(12, i);
+		gotoxy(17, i);
 		printf("#");
-		gotoxy(i, 12);
+		gotoxy(i, 17);
 		printf("#");
 	}
+	wall(3, 3); wall(4, 3); wall(3, 4); wall(7, 2); wall(8, 2); wall(9, 2); wall(10, 2); wall(11, 2); wall(12, 2); wall(8, 3); wall(2, 6);
+	wall(4, 6); wall(4, 7); wall(5, 6); wall(5, 5); wall(8, 6); wall(9, 6); wall(10, 6); wall(11, 6); wall(11, 5); wall(11, 7); wall(14, 4);
+	wall(14, 5); wall(14, 6); wall(15, 6); wall(3, 9); wall(3, 10); wall(6, 9); wall(7, 9); wall(8, 9); wall(9, 9); wall(9, 11); wall(10, 11);
+	wall(11, 11); wall(12, 11); wall(13, 11); wall(12, 10);  wall(15, 9); wall(15, 10); wall(15, 11); wall(15, 12); wall(3, 12);  wall(4, 12);
+	wall(5, 12); wall(6, 12); wall(4, 13); wall(4, 14); wall(9, 13); wall(2, 15); wall(2, 16); wall(7, 15); wall(8, 15); wall(9, 15);
+	wall(12, 13); wall(12, 14); wall(12, 15); wall(14, 14); wall(15, 14); wall(16, 14); wall(5, 16);
 }
 
 int getCommand() {
@@ -600,23 +668,23 @@ void snake_move_mid() {
 			else {
 				score += 10;
 			}
-            time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-                Coord fruitxy = fruit();
-                fruity = fruitxy.y;
-                fruitx = fruitxy.x;
-                gotoxy(fruitxy.x, fruitxy.y);
-                printf("@");
-                gotoxy(-1, -1);
-                printf("score = %d", score);
+			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			Coord fruitxy = fruit();
+			fruity = fruitxy.y;
+			fruitx = fruitxy.x;
+			gotoxy(fruitxy.x, fruitxy.y);
+			printf("@");
+			gotoxy(-1, -1);
+			printf("score = %d", score);
 
-            }
-            if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
-                Coord fruitxy = fruit();
-                fruitx = fruitxy.x;
-                fruity = fruitxy.y;
-                gotoxy(fruitx, fruity);
-                printf("@");
-            }
+		}
+		if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
+			Coord fruitxy = fruit();
+			fruitx = fruitxy.x;
+			fruity = fruitxy.y;
+			gotoxy(fruitx, fruity);
+			printf("@");
+		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
@@ -758,11 +826,11 @@ void snake_move_mid() {
 }
 
 void snake_move_high() {
-	int x = 11, y = 9;
-	int x1 = 10, y1 = 9;
-	int x2 = 9, y2 = 9;
-	int x3 = 8, y3 = 9;
-	int x4 = 7, y4 = 9;
+	int x = 11, y = 8;
+	int x1 = 10, y1 = 8;
+	int x2 = 9, y2 = 8;
+	int x3 = 8, y3 = 8;
+	int x4 = 7, y4 = 8;
 	char dir = 'd';
 	char input = 'e';
 	//Deleted the drawing since it's already drawn in the make_stage function
@@ -784,11 +852,22 @@ void snake_move_high() {
 				x4 = x3; x3 = x2; x2 = x1; x1 = x;
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				y = y - 1;
-				if (y == 6) {
+				if (y == 1) {
 					gameover();
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 4) || (x == 4 && y == 3) || (x == 7 && y == 2) || (x == 8 && y == 3) || (x == 9 && y == 2) ||
+					(x == 10 && y == 2) || (x == 11 && y == 2) || (x == 12 && y == 2) || (x == 2 && y == 6) || (x == 4 && y == 7) ||
+					(x == 5 && y == 6) || (x == 8 && y == 6) || (x == 9 && y == 6) || (x == 10 && y == 6) || (x == 11 && y == 7) ||
+					(x == 14 && y == 6) || (x == 15 && y == 6) || (x == 3 && y == 10) || (x == 6 && y == 9) || (x == 7 && y == 9) ||
+					(x == 8 && y == 9) || (x == 9 && y == 9) || (x == 3 && y == 12) || (x == 4 && y == 14) || (x == 5 && y == 12) ||
+					(x == 6 && y == 12) || (x == 9 && y == 11) || (x == 10 && y == 11) || (x == 11 && y == 11) || (x == 12 && y == 11) ||
+					(x == 13 && y == 11) || (x == 15 && y == 12) || (x == 9 && y == 13) || (x == 7 && y == 15) || (x == 8 && y == 15) ||
+					(x == 9 && y == 15) || (x == 12 && y == 15) || (x == 14 && y == 14) || (x == 15 && y == 14) || (x == 16 && y == 14)) {
 					gameover();
 					break;
 				}
@@ -810,11 +889,21 @@ void snake_move_high() {
 				x4 = x3; x3 = x2; x2 = x1; x1 = x;
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x - 1;
-				if (x == 6) {
+				if (x == 1) {
 					gameover();
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 4) || (x == 4 && y == 3) || (x == 2 && y == 6) || (x == 4 && y == 7) || (x == 5 && y == 5) ||
+					(x == 5 && y == 6) || (x == 11 && y == 6) || (x == 11 && y == 5) || (x == 11 && y == 7) || (x == 14 && y == 4) ||
+					(x == 14 && y == 5) || (x == 15 && y == 6) || (x == 12 && y == 2) || (x == 8 && y == 3) || (x == 3 && y == 9) ||
+					(x == 9 && y == 9) || (x == 3 && y == 10) || (x == 6 && y == 12) || (x == 4 && y == 13) || (x == 4 && y == 14) ||
+					(x == 12 && y == 10) || (x == 13 && y == 11) || (x == 15 && y == 9) || (x == 15 && y == 10) || (x == 15 && y == 11) ||
+					(x == 15 && y == 12) || (x == 9 && y == 13) || (x == 9 && y == 15) || (x == 2 && y == 15) || (x == 2 && y == 16) ||
+					(x == 12 && y == 13) || (x == 12 && y == 14) || (x == 12 && y == 15) || (x == 5 && y == 16)) {
 					gameover();
 					break;
 				}
@@ -836,11 +925,22 @@ void snake_move_high() {
 				x4 = x3; x3 = x2; x2 = x1; x1 = x;
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				y = y + 1;
-				if (y == 12) {
+				if (y == 17) {
 					gameover();
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 3) || (x == 4 && y == 3) || (x == 2 && y == 6) || (x == 4 && y == 6) ||	(x == 5 && y == 5) ||
+					(x == 8 && y == 6) || (x == 9 && y == 6) || (x == 10 && y == 6) || (x == 11 && y == 5) || (x == 14 && y == 4) ||
+					(x == 15 && y == 6) || (x == 3 && y == 9) || (x == 6 && y == 9) || (x == 7 && y == 9) || (x == 8 && y == 9) ||
+					(x == 9 && y == 9) || (x == 3 && y == 12) || (x == 4 && y == 12) || (x == 5 && y == 12) || (x == 6 && y == 12) ||
+					(x == 9 && y == 11) || (x == 10 && y == 11) || (x == 11 && y == 11) || (x == 12 && y == 10) || (x == 13 && y == 11) ||
+					(x == 15 && y == 9) || (x == 9 && y == 13) || (x == 7 && y == 15) || (x == 8 && y == 15) || (x == 9 && y == 15) ||
+					(x == 12 && y == 13) || (x == 14 && y == 14) || (x == 15 && y == 14) || (x == 16 && y == 14) || (x == 5 && y == 16) ||
+					(x == 2 && y == 15)) {
 					gameover();
 					break;
 				}
@@ -862,11 +962,21 @@ void snake_move_high() {
 				x4 = x3; x3 = x2; x2 = x1; x1 = x;
 				y4 = y3; y3 = y2; y2 = y1; y1 = y;
 				x = x + 1;
-				if (x == 12) {
+				if (x == 17) {
 					gameover();
 					break;
 				}
 				if (x == x4 && y == y4) {
+					gameover();
+					break;
+				}
+				if ((x == 3 && y == 3) || (x == 3 && y == 4) || (x == 7 && y == 2) || (x == 4 && y == 7) || (x == 5 && y == 5) ||
+					(x == 4 && y == 6) || (x == 8 && y == 6) || (x == 11 && y == 5) || (x == 11 && y == 7) || (x == 14 && y == 4) ||
+					(x == 14 && y == 5) || (x == 14 && y == 6) || (x == 8 && y == 3) || (x == 3 && y == 9) || (x == 6 && y == 9) ||
+					(x == 3 && y == 10) || (x == 3 && y == 12) || (x == 4 && y == 13) || (x == 4 && y == 14) ||	(x == 12 && y == 10) ||
+					(x == 9 && y == 11) || (x == 15 && y == 9) || (x == 15 && y == 10) || (x == 15 && y == 11) || (x == 15 && y == 12) ||
+					(x == 9 && y == 13) || (x == 7 && y == 15) || (x == 12 && y == 14) || (x == 12 && y == 13) || (x == 12 && y == 15) ||
+					(x == 14 && y == 14) || (x == 5 && y == 16)) {
 					gameover();
 					break;
 				}
