@@ -486,17 +486,17 @@ void snake_move_low() {
 		srand(time(NULL));
 		if (x == fruitx && y == fruity) {
 			int cur = time(NULL);
-			if (cur - last <= 0.5) {
+			if (cur - last <= 0.9) {
 				score *= 2;
 				fruitsound();
 				soundcount++;
 			}
-			else if (cur - last <= 1) {
+			else if (cur - last <= 1.5) {
 				score += 20;
 				soundcount = 0;
 				fruitsound();
 			}
-			else if (cur - last <= 1.5) {
+			else if (cur - last <= 1.9) {
 				score += 15;
 				soundcount = 0;
 				fruitsound();
@@ -669,17 +669,17 @@ void snake_move_mid() {
 		srand(time(NULL));
 		if (x == fruitx && y == fruity) {
 			int cur = time(NULL);
-			if (cur - last <= 0.5) {
+			if (cur - last <= 0.9) {
 				fruitsound();
 				soundcount++;
 				score *= 2;
 			}
-			else if (cur - last <= 1) {
+			else if (cur - last <= 1.5) {
 				score += 20;
 				soundcount = 0;
 				fruitsound();
 			}
-			else if (cur - last <= 1.5) {
+			else if (cur - last <= 1.9) {
 				score += 15;
 				soundcount = 0;
 				fruitsound();
