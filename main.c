@@ -12,6 +12,9 @@
 #define E4 329.6276
 #define F4 349.2282
 #define G4 391.9954
+#define A4 440.0000
+#define B4 493.8833
+int soundcount = 0;
 
 
 int height = 17, width = 17;  //dimensions of out field
@@ -148,6 +151,7 @@ void stopwatch();               //스톱워치 보여주기
 void wall();                //장애물
 Coord fruit();
 bool isWall(Coord coord);
+void fruitsound();			//fruit을 빨리 먹으면 소리 출력
 int main(void) {
 	startscr();
 	return 0;
@@ -478,20 +482,29 @@ void snake_move_low() {
 	printf("score = %d", score);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
+
 		srand(time(NULL));
 		if (x == fruitx && y == fruity) {
 			int cur = time(NULL);
 			if (cur - last <= 0.5) {
 				score *= 2;
+				fruitsound();
+				soundcount++;
 			}
 			else if (cur - last <= 1) {
 				score += 20;
+				soundcount = 0;
+				fruitsound();
 			}
 			else if (cur - last <= 1.5) {
 				score += 15;
+				soundcount = 0;
+				fruitsound();
 			}
 			else {
 				score += 10;
+				soundcount = 0;
+				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
 			fruitx = 2 + rand() % 15;
@@ -657,16 +670,24 @@ void snake_move_mid() {
 		if (x == fruitx && y == fruity) {
 			int cur = time(NULL);
 			if (cur - last <= 0.5) {
+				fruitsound();
+				soundcount++;
 				score *= 2;
 			}
 			else if (cur - last <= 1) {
 				score += 20;
+				soundcount = 0;
+				fruitsound();
 			}
 			else if (cur - last <= 1.5) {
 				score += 15;
+				soundcount = 0;
+				fruitsound();
 			}
 			else {
 				score += 10;
+				soundcount = 0;
+				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
 			Coord fruitxy = fruit();
@@ -933,7 +954,7 @@ void snake_move_high() {
 					gameover();
 					break;
 				}
-				if ((x == 3 && y == 3) || (x == 4 && y == 3) || (x == 2 && y == 6) || (x == 4 && y == 6) ||	(x == 5 && y == 5) ||
+				if ((x == 3 && y == 3) || (x == 4 && y == 3) || (x == 2 && y == 6) || (x == 4 && y == 6) || (x == 5 && y == 5) ||
 					(x == 8 && y == 6) || (x == 9 && y == 6) || (x == 10 && y == 6) || (x == 11 && y == 5) || (x == 14 && y == 4) ||
 					(x == 15 && y == 6) || (x == 3 && y == 9) || (x == 6 && y == 9) || (x == 7 && y == 9) || (x == 8 && y == 9) ||
 					(x == 9 && y == 9) || (x == 3 && y == 12) || (x == 4 && y == 12) || (x == 5 && y == 12) || (x == 6 && y == 12) ||
@@ -973,7 +994,7 @@ void snake_move_high() {
 				if ((x == 3 && y == 3) || (x == 3 && y == 4) || (x == 7 && y == 2) || (x == 4 && y == 7) || (x == 5 && y == 5) ||
 					(x == 4 && y == 6) || (x == 8 && y == 6) || (x == 11 && y == 5) || (x == 11 && y == 7) || (x == 14 && y == 4) ||
 					(x == 14 && y == 5) || (x == 14 && y == 6) || (x == 8 && y == 3) || (x == 3 && y == 9) || (x == 6 && y == 9) ||
-					(x == 3 && y == 10) || (x == 3 && y == 12) || (x == 4 && y == 13) || (x == 4 && y == 14) ||	(x == 12 && y == 10) ||
+					(x == 3 && y == 10) || (x == 3 && y == 12) || (x == 4 && y == 13) || (x == 4 && y == 14) || (x == 12 && y == 10) ||
 					(x == 9 && y == 11) || (x == 15 && y == 9) || (x == 15 && y == 10) || (x == 15 && y == 11) || (x == 15 && y == 12) ||
 					(x == 9 && y == 13) || (x == 7 && y == 15) || (x == 12 && y == 14) || (x == 12 && y == 13) || (x == 12 && y == 15) ||
 					(x == 14 && y == 14) || (x == 5 && y == 16)) {
@@ -1014,4 +1035,17 @@ void stopwatch() {
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
 	return;
+}
+
+void fruitsound()
+{
+	switch (soundcount) {
+	case 0: Beep(C4, 250); break;
+	case 1: Beep(D4, 250); break;
+	case 2: Beep(E4, 250); break;
+	case 3: Beep(F4, 250); break;
+	case 4: Beep(G4, 250); break;
+	case 5: Beep(A4, 250); break;
+	default: Beep(B4, 250); break;
+	}
 }
