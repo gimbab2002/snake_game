@@ -5,6 +5,7 @@
 #include<stdlib.h>
 #include<process.h>
 #include<stdbool.h>
+#include<string.h>
 #define A3 220.0000
 #define B3 246.9417
 #define C4 261.6256
@@ -16,25 +17,29 @@
 #define B4 493.8833
 int soundcount = 0;
 
-
 int height = 17, width = 17;  //dimensions of out field
+
 typedef struct RECORD {
 	char name[100];
 	int score;
 	int minute;
 	int sec;
 }record; //이름, 점수, 시간을 저장할 구조체
+
 typedef struct Coord {
 	int x;
 	int y;
 }Coord;
+
 int score;
 int fruitx, fruity;
 int fruitx1, fruity1;
 int fruitx2, fruity2;// Global variables 선언// Global variables 선언
+
 record nowrec;
 
 int over = 0;
+
 const Coord WALLS[] = {
 	{.x = 3, .y = 3},
 	{.x = 4, .y = 3},
@@ -179,6 +184,7 @@ void wall();                //장애물
 Coord fruit();
 bool isWall(Coord coord);
 void fruitsound();			//fruit을 빨리 먹으면 소리 출력
+
 int main(void) {
 	startscr();
 	return 0;
@@ -383,43 +389,141 @@ void rank_call() {
 	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
 	else {
 		printf("\n");
-		/* 정렬 하고 나서
-			아직 미구현  */
 
-		while (fscanf_s(rank, "%s %d %d : %d\n", reading.name, sizeof(reading.name), &reading.score, &reading.minute, &reading.sec) != EOF)
-			printf("%s %d %d : %d\n", reading.name, reading.score, reading.minute, reading.sec);
+		while (fscanf(rank, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
+			printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+			Sleep(1000);
+		}
 		fclose(rank);
 		printf("\n");
 	}
 
 }
-
 void rankrecord() {
+	FILE* rank;
+	if ((rank = fopen("rank.txt", "r")) == NULL)		//if there's not rank.txt file, it will create the file.
+	{
+		rank = fopen("rank.txt", "w+");
+	}
 	printf("\npress enter to proceed...\n");
 	while (getchar() != '\n');
-	printf("\n\n\n\n\n\npress r to record your ranking...\n");
-	char input = _getch();
-	if (input == 'r') {
-		FILE* rank;
-		fopen_s(&rank, "rank.txt", "a");
-	rerun:
-		printf("enter your name: ");
-		gets_s(nowrec.name, sizeof(nowrec.name));
-		if (strlen(nowrec.name) < 3) {
-			printf("name must be at least 3 words...\n\n");
-			goto rerun;
+	record* rec;
+	record* cur;
+	record* pre;
+	record* first;
+	record* temp;
+	first = (record*)malloc(sizeof(record));
+	first->score = -1;
+	first->next = NULL;
+	temp = (record*)malloc(sizeof(record));
+	while (fscanf(rank, "%s %d %d : %d\n", temp->name, &temp->score, &temp->minute, &temp->sec) != EOF) {			//read the rank and sort.
+		if (first->next == NULL) {
+			rec = (record*)malloc(sizeof(record));
+			strcpy(rec->name, temp->name);
+			rec->score = temp->score;
+			rec->minute = temp->minute;
+			rec->sec = temp->sec;
+			rec->next = NULL;
+
+			first->next = rec;
 		}
-		while (1) {
-			printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
-			printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
-			input = _getch();
-			if (input == 'n') goto rerun;
-			else if (input == 'y') break;
-			else printf("wrong input\n\n");
+		else {
+			rec = (record*)malloc(sizeof(record));
+			strcpy(rec->name, temp->name);
+			rec->score = temp->score;
+			rec->minute = temp->minute;
+			rec->sec = temp->sec;
+			rec->next = NULL;
+
+			pre = first;
+			cur = first->next;
+			while (cur != NULL) {
+				if (rec->score < cur->score) {
+					pre = cur;
+					cur = cur->next;
+				}
+				else break;
+			}
+			pre->next = rec;
+			rec->next = cur;
 		}
-		fprintf(rank, "%s %d %d : %d\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
+	}
+	pre = first;
+	cur = first->next;
+	while (cur != NULL) {
+		pre = cur;
+		cur = cur->next;
+	}
+	if (pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
+		char input;
+	re:
+		printf("you are in top 10. Do you wanna record your record? if so, press 'y'. if not press 'n'\n");		//from here, TUI strating.
+		input = _getch();
+		if (input == 'y') {
+		rerun:
+			printf("enter your name: ");
+			gets_s(nowrec.name, sizeof(nowrec.name));
+			if (strlen(nowrec.name) < 3) {
+				printf("name must be at least 3 words...\n\n");
+				goto rerun;
+			}
+			while (1) {
+				printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
+				printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
+				input = _getch();
+				if (input == 'n') goto rerun;
+				else if (input == 'y') break;
+				else printf("wrong input\n\n");
+			}
+		}
+		else if (input == 'n') {
+			return;
+		}
+		else {
+			printf("Wrong input. Press any key to try again\n\n");
+			_kbhit();
+			goto re;
+		}
 		fclose(rank);
+		rank = fopen("rank.txt", "w");
+		rec = (record*)malloc(sizeof(record));				//rank record start
+		strcpy(rec->name, nowrec.name);
+		rec->score = nowrec.score;
+		rec->minute = nowrec.minute;
+		rec->sec = nowrec.sec;
+		pre = first;
+		cur = first->next;
+		while (cur != NULL) {
+			if (rec->score <= cur->score) {
+				pre = cur;
+				cur = cur->next;
+			}
+			else break;
+		}
+		pre->next = rec;
+		rec->next = cur;
+		pre = first;
+		cur = first->next;
+		int i = 0;
+		while (cur != NULL) {
+
+			fprintf(rank, "%s %d %d : %d\n", cur->name, cur->score, cur->minute, cur->sec);
+			pre = cur;
+			cur = cur->next;
+			i++;
+			if (i > 9)break;
+		}
 		printf("saved!\n");
+		free(temp);											//free the linked lists.
+		cur = first->next;
+		while (cur != NULL) {
+			record* next = cur->next;
+			free(cur);
+			cur = next;
+		}
+		free(first);
+		fclose(rank);
+
 	}
 }
 
