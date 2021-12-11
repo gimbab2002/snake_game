@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<windows.h>
 #include<conio.h>
@@ -5,6 +6,7 @@
 #include<stdlib.h>
 #include<process.h>
 #include<stdbool.h>
+#include<string.h>
 #define A3 220.0000
 #define B3 246.9417
 #define C4 261.6256
@@ -23,6 +25,7 @@ typedef struct RECORD {
 	int score;
 	int minute;
 	int sec;
+	struct RECORD* next;
 }record; //이름, 점수, 시간을 저장할 구조체
 typedef struct Coord {
 	int x;
@@ -175,7 +178,7 @@ void rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
 void stopwatch();               //스톱워치 보여주기
-void wall();                //장애물
+void wall(int x, int y);                //장애물
 Coord fruit();
 bool isWall(Coord coord);
 void fruitsound();			//fruit을 빨리 먹으면 소리 출력
@@ -193,20 +196,20 @@ bool isWall(Coord coord)
 			return 1;
 		}
 	}
-   for (int i = 0; i < sizeof(WALLS1) / sizeof(Coord); i++)
-   {
-      if (coord.x == WALLS1[i].x && coord.y == WALLS1[i].y)
-      {
-         return 1;
-      }
-   }
-   for (int i = 0; i < sizeof(WALLS2) / sizeof(Coord); i++)
-   {
-      if (coord.x == WALLS2[i].x && coord.y == WALLS2[i].y)
-      {
-         return 1;
-      }
-   }
+	for (int i = 0; i < sizeof(WALLS1) / sizeof(Coord); i++)
+	{
+		if (coord.x == WALLS1[i].x && coord.y == WALLS1[i].y)
+		{
+			return 1;
+		}
+	}
+	for (int i = 0; i < sizeof(WALLS2) / sizeof(Coord); i++)
+	{
+		if (coord.x == WALLS2[i].x && coord.y == WALLS2[i].y)
+		{
+			return 1;
+		}
+	}
 
 	return 0;
 }
@@ -235,7 +238,7 @@ void wall(int x, int y) {
 }
 
 void make_stage_low() {
-              //Drawing the snake in this function
+	//Drawing the snake in this function
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -279,12 +282,12 @@ void make_stage_low() {
 	printf("# # #");
 	gotoxy(11, 14);
 	printf("# # #");
-    Coord fruit2xy = fruit();
-    fruity2 = fruit2xy.y;
-    fruitx2 = fruit2xy.x;
-    gotoxy(fruitx2, fruity2);   // Feeding 2+rand()%15 into gotoxy
-    printf("@");
- }
+	Coord fruit2xy = fruit();
+	fruity2 = fruit2xy.y;
+	fruitx2 = fruit2xy.x;
+	gotoxy(fruitx2, fruity2);   // Feeding 2+rand()%15 into gotoxy
+	printf("@");
+}
 
 void make_stage_mid() {
 	int x = 9, y = 9;
@@ -356,11 +359,11 @@ void make_stage_high() {
 	wall(11, 11); wall(12, 11); wall(13, 11); wall(12, 10);  wall(15, 9); wall(15, 10); wall(15, 11); wall(15, 12); wall(3, 12);  wall(4, 12);
 	wall(5, 12); wall(6, 12); wall(4, 13); wall(4, 14); wall(9, 13); wall(2, 15); wall(2, 16); wall(7, 15); wall(8, 15); wall(9, 15);
 	wall(12, 13); wall(12, 14); wall(12, 15); wall(14, 14); wall(15, 14); wall(16, 14); wall(5, 16);
-    Coord fruit1xy = fruit();
-    fruity1 = fruit1xy.y;
-    fruitx1 = fruit1xy.x;
-    gotoxy(fruitx1, fruity1);   // Feeding 2+rand()%15 into gotoxy
-    printf("@");
+	Coord fruit1xy = fruit();
+	fruity1 = fruit1xy.y;
+	fruitx1 = fruit1xy.x;
+	gotoxy(fruitx1, fruity1);   // Feeding 2+rand()%15 into gotoxy
+	printf("@");
 }
 
 int getCommand() {
@@ -383,11 +386,11 @@ void rank_call() {
 	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
 	else {
 		printf("\n");
-		/* 정렬 하고 나서
-			아직 미구현  */
 
-		while (fscanf_s(rank, "%s %d %d : %d\n", reading.name, sizeof(reading.name), &reading.score, &reading.minute, &reading.sec) != EOF)
-			printf("%s %d %d : %d\n", reading.name, reading.score, reading.minute, reading.sec);
+		while (fscanf(rank, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
+			printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+			Sleep(1000);
+		}
 		fclose(rank);
 		printf("\n");
 	}
@@ -395,33 +398,133 @@ void rank_call() {
 }
 
 void rankrecord() {
+	FILE* rank;
+	if ((rank = fopen("rank.txt", "r")) == NULL)		//if there's not rank.txt file, it will create the file.
+	{
+		rank = fopen("rank.txt", "w+");
+	}
 	printf("\npress enter to proceed...\n");
 	while (getchar() != '\n');
-	printf("\n\n\n\n\n\npress r to record your ranking...\n");
-	char input = _getch();
-	if (input == 'r') {
-		FILE* rank;
-		fopen_s(&rank, "rank.txt", "a");
-	rerun:
-		printf("enter your name: ");
-		gets_s(nowrec.name, sizeof(nowrec.name));
-		if (strlen(nowrec.name) < 3) {
-			printf("name must be at least 3 words...\n\n");
-			goto rerun;
+	record* rec;
+	record* cur;
+	record* pre;
+	record* first;
+	record* temp;
+	first = (record*)malloc(sizeof(record));
+	first->score = -1;
+	first->next = NULL;
+	temp = (record*)malloc(sizeof(record));
+	while (fscanf(rank, "%s %d %d : %d\n", temp->name, &temp->score, &temp->minute, &temp->sec) != EOF) {			//read the rank and sort.
+		if (first->next == NULL) {
+			rec = (record*)malloc(sizeof(record));
+			strcpy(rec->name, temp->name);
+			rec->score = temp->score;
+			rec->minute = temp->minute;
+			rec->sec = temp->sec;
+			rec->next = NULL;
+
+			first->next = rec;
 		}
-		while (1) {
-			printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
-			printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
-			input = _getch();
-			if (input == 'n') goto rerun;
-			else if (input == 'y') break;
-			else printf("wrong input\n\n");
+		else {
+			rec = (record*)malloc(sizeof(record));
+			strcpy(rec->name, temp->name);
+			rec->score = temp->score;
+			rec->minute = temp->minute;
+			rec->sec = temp->sec;
+			rec->next = NULL;
+
+			pre = first;
+			cur = first->next;
+			while (cur != NULL) {
+				if (rec->score < cur->score) {
+					pre = cur;
+					cur = cur->next;
+				}
+				else break;
+			}
+			pre->next = rec;
+			rec->next = cur;
 		}
-		fprintf(rank, "%s %d %d : %d\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
+	}
+	pre = first;
+	cur = first->next;
+	while (cur != NULL) {
+		pre = cur;
+		cur = cur->next;
+	}
+	if (pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
+		char input;
+	re:
+		printf("you are in top 10. Do you wanna record your record? if so, press 'y'. if not press 'n'\n");		//from here, TUI strating.
+		input = _getch();
+		if (input == 'y') {
+		rerun:
+			printf("enter your name: ");
+			gets_s(nowrec.name, sizeof(nowrec.name));
+			if (strlen(nowrec.name) < 3) {
+				printf("name must be at least 3 words...\n\n");
+				goto rerun;
+			}
+			while (1) {
+				printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
+				printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
+				input = _getch();
+				if (input == 'n') goto rerun;
+				else if (input == 'y') break;
+				else printf("wrong input\n\n");
+			}
+		}
+		else if (input == 'n') {
+			return;
+		}
+		else {
+			printf("Wrong input. Press any key to try again\n\n");
+			_kbhit();
+			goto re;
+		}
 		fclose(rank);
+		rank = fopen("rank.txt", "w");
+		rec = (record*)malloc(sizeof(record));				//rank record start
+		strcpy(rec->name, nowrec.name);
+		rec->score = nowrec.score;
+		rec->minute = nowrec.minute;
+		rec->sec = nowrec.sec;
+		pre = first;
+		cur = first->next;
+		while (cur != NULL) {
+			if (rec->score <= cur->score) {
+				pre = cur;
+				cur = cur->next;
+			}
+			else break;
+		}
+		pre->next = rec;
+		rec->next = cur;
+		pre = first;
+		cur = first->next;
+		int i = 0;
+		while (cur != NULL) {
+
+			fprintf(rank, "%s %d %d : %d\n", cur->name, cur->score, cur->minute, cur->sec);
+			pre = cur;
+			cur = cur->next;
+			i++;
+			if (i > 9)break;
+		}
 		printf("saved!\n");
+		free(temp);											//free the linked lists.
+		cur = first->next;
+		while (cur != NULL) {
+			record* next = cur->next;
+			free(cur);
+			cur = next;
+		}
+		free(first);
+		fclose(rank);
+
 	}
 }
+
 
 void startscr()
 {
@@ -464,7 +567,6 @@ start:
 			cursor(0);
 			make_stage_mid();
 			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
-			Sleep(1);
 			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
@@ -510,11 +612,13 @@ void gameover() {
 	printf("        *    *   *     *   *    **    *  *                *    *     * *     *        *    *        \n");
 	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
 	cursor(1);
+	nowrec.score = score;
 	rankrecord();
 	printf("press any key to back to title...");
 	_getch();
 	startscr();
 }
+
 
 void snake_move_low() {
 	score = 0;
@@ -555,21 +659,21 @@ void snake_move_low() {
 				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-            Coord fruit2xy = fruit();
-            fruity2 = fruit2xy.y;
-            fruitx2 = fruit2xy.x;
-            gotoxy(fruit2xy.x, fruit2xy.y);
-            printf("@");
-            gotoxy(-1, -1);
-            printf("score = %d", score);
+			Coord fruit2xy = fruit();
+			fruity2 = fruit2xy.y;
+			fruitx2 = fruit2xy.x;
+			gotoxy(fruit2xy.x, fruit2xy.y);
+			printf("@");
+			gotoxy(-1, -1);
+			printf("score = %d", score);
 
 		}
 		if ((x1 == fruitx2 && y1 == fruity2) || (x2 == fruitx2 && y2 == fruity2) || (x3 == fruitx2 && y3 == fruity2) || (x4 == fruitx2 && y4 == fruity2)) {
-            Coord fruit2xy = fruit();
-            fruity2 = fruit2xy.y;
-            fruitx2 = fruit2xy.x;
-            gotoxy(fruit2xy.x, fruit2xy.y);
-            printf("@");
+			Coord fruit2xy = fruit();
+			fruity2 = fruit2xy.y;
+			fruitx2 = fruit2xy.x;
+			gotoxy(fruit2xy.x, fruit2xy.y);
+			printf("@");
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
@@ -896,8 +1000,8 @@ void snake_move_mid() {
 }
 
 void snake_move_high() {
-    score = 0;
-    int last = time(NULL);
+	score = 0;
+	int last = time(NULL);
 	int x = 11, y = 8;
 	int x1 = 10, y1 = 8;
 	int x2 = 9, y2 = 8;
@@ -905,50 +1009,50 @@ void snake_move_high() {
 	int x4 = 7, y4 = 8;
 	char dir = 'd';
 	char input = 'e';
-    gotoxy(-1, -1);
-    printf("score = %d", score);
+	gotoxy(-1, -1);
+	printf("score = %d", score);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
-        srand(time(NULL));
-           if (x == fruitx1 && y == fruity1) {
-              int cur = time(NULL);
-              if (cur - last <= 1.2) {
-                 fruitsound();
-                 soundcount++;
-                 score *= 2;
-              }
-              else if (cur - last <= 1.7) {
-                 score += 20;
-                 soundcount = 0;
-                 fruitsound();
-              }
-              else if (cur - last <= 2) {
-                 score += 15;
-                 soundcount = 0;
-                 fruitsound();
-              }
-              else {
-                 score += 10;
-                 soundcount = 0;
-                 fruitsound();
-              }
-              time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-              Coord fruit1xy = fruit();
-              fruity1 = fruit1xy.y;
-              fruitx1 = fruit1xy.x;
-              gotoxy(fruit1xy.x, fruit1xy.y);
-              printf("@");
-              gotoxy(-1, -1);
-              printf("score = %d", score);
+		srand(time(NULL));
+		if (x == fruitx1 && y == fruity1) {
+			int cur = time(NULL);
+			if (cur - last <= 1.2) {
+				fruitsound();
+				soundcount++;
+				score *= 2;
+			}
+			else if (cur - last <= 1.7) {
+				score += 20;
+				soundcount = 0;
+				fruitsound();
+			}
+			else if (cur - last <= 2) {
+				score += 15;
+				soundcount = 0;
+				fruitsound();
+			}
+			else {
+				score += 10;
+				soundcount = 0;
+				fruitsound();
+			}
+			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			Coord fruit1xy = fruit();
+			fruity1 = fruit1xy.y;
+			fruitx1 = fruit1xy.x;
+			gotoxy(fruit1xy.x, fruit1xy.y);
+			printf("@");
+			gotoxy(-1, -1);
+			printf("score = %d", score);
 
-           }
-           if ((x1 == fruitx1 && y1 == fruity1) || (x2 == fruitx1 && y2 == fruity1) || (x3 == fruitx1 && y3 == fruity1) || (x4 == fruitx1 && y4 == fruity1)) {
-              Coord fruit1xy = fruit();
-              fruitx1 = fruit1xy.x;
-              fruity1 = fruit1xy.y;
-              gotoxy(fruitx1, fruity1);
-              printf("@");
-           }
+		}
+		if ((x1 == fruitx1 && y1 == fruity1) || (x2 == fruitx1 && y2 == fruity1) || (x3 == fruitx1 && y3 == fruity1) || (x4 == fruitx1 && y4 == fruity1)) {
+			Coord fruit1xy = fruit();
+			fruitx1 = fruit1xy.x;
+			fruity1 = fruit1xy.y;
+			gotoxy(fruitx1, fruity1);
+			printf("@");
+		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
@@ -1104,18 +1208,13 @@ void snake_move_high() {
 void stopwatch() {
 	clock_t s, n;
 	s = clock();
-	while (1) {
+	while (over != 1) {
 		n = clock();
 		cursor(0);
 		gotoxy(14, 0);
 		printf(" %d : %d", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60);
-		if (over == 1) {
-			break;
-		}
 		Sleep(1000);
 	}
-	gotoxy(14, 0);
-	printf(" **** ");
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
 	return;
