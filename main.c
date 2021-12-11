@@ -29,7 +29,9 @@ typedef struct Coord {
 	int y;
 }Coord;
 int score;
-int fruitx, fruity;  // Global variables 선언
+int fruitx, fruity;
+int fruitx1, fruity1;
+int fruitx2, fruity2;// Global variables 선언// Global variables 선언
 record nowrec;
 
 int over = 0;
@@ -134,6 +136,31 @@ const Coord WALLS1[] = {    //60개
 	{.x = 16, .y = 14},
 	{.x = 5, .y = 16},
 };
+const Coord WALLS2[] = {
+   {.x = 4, .y = 4},
+   {.x = 5, .y = 4},
+   {.x = 4, .y = 5},
+   {.x = 5, .y = 5},
+   {.x = 9, .y = 5},
+   {.x = 10, .y = 5},
+   {.x = 11, .y = 5},
+   {.x = 9, .y = 6},
+   {.x = 10, .y = 6},
+   {.x = 11, .y = 6},
+   {.x = 5, .y = 10},
+   {.x = 6, .y = 10},
+   {.x = 5, .y = 11},
+   {.x = 6, .y = 11},
+   {.x = 5, .y = 12},
+   {.x = 6, .y = 12},
+   {.x = 11, .y = 13},
+   {.x = 12, .y = 13},
+   {.x = 13, .y = 13},
+   {.x = 11, .y = 14},
+   {.x = 12, .y = 14},
+   {.x = 13, .y = 14}
+};
+
 void gotoxy(int x, int y);          //입력 위치 설정
 void make_stage_low();                  //스테이지하 구현
 void make_stage_mid();                  //스테이지중 구현
@@ -166,6 +193,21 @@ bool isWall(Coord coord)
 			return 1;
 		}
 	}
+   for (int i = 0; i < sizeof(WALLS1) / sizeof(Coord); i++)
+   {
+      if (coord.x == WALLS1[i].x && coord.y == WALLS1[i].y)
+      {
+         return 1;
+      }
+   }
+   for (int i = 0; i < sizeof(WALLS2) / sizeof(Coord); i++)
+   {
+      if (coord.x == WALLS2[i].x && coord.y == WALLS2[i].y)
+      {
+         return 1;
+      }
+   }
+
 	return 0;
 }
 Coord fruit() {
@@ -193,7 +235,7 @@ void wall(int x, int y) {
 }
 
 void make_stage_low() {
-	score = 0;               //Drawing the snake in this function
+              //Drawing the snake in this function
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -237,11 +279,12 @@ void make_stage_low() {
 	printf("# # #");
 	gotoxy(11, 14);
 	printf("# # #");
-	fruitx = 2 + rand() % 15;      // Drawing the fruit and make it appear in a random spot
-	fruity = 2 + rand() % 15;
-	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
-	printf("@");
-}
+    Coord fruit2xy = fruit();
+    fruity2 = fruit2xy.y;
+    fruitx2 = fruit2xy.x;
+    gotoxy(fruitx2, fruity2);   // Feeding 2+rand()%15 into gotoxy
+    printf("@");
+ }
 
 void make_stage_mid() {
 	int x = 9, y = 9;
@@ -313,6 +356,11 @@ void make_stage_high() {
 	wall(11, 11); wall(12, 11); wall(13, 11); wall(12, 10);  wall(15, 9); wall(15, 10); wall(15, 11); wall(15, 12); wall(3, 12);  wall(4, 12);
 	wall(5, 12); wall(6, 12); wall(4, 13); wall(4, 14); wall(9, 13); wall(2, 15); wall(2, 16); wall(7, 15); wall(8, 15); wall(9, 15);
 	wall(12, 13); wall(12, 14); wall(12, 15); wall(14, 14); wall(15, 14); wall(16, 14); wall(5, 16);
+    Coord fruit1xy = fruit();
+    fruity1 = fruit1xy.y;
+    fruitx1 = fruit1xy.x;
+    gotoxy(fruitx1, fruity1);   // Feeding 2+rand()%15 into gotoxy
+    printf("@");
 }
 
 int getCommand() {
@@ -484,7 +532,7 @@ void snake_move_low() {
 	while (1) {
 
 		srand(time(NULL));
-		if (x == fruitx && y == fruity) {
+		if (x == fruitx2 && y == fruity2) {
 			int cur = time(NULL);
 			if (cur - last <= 0.9) {
 				score *= 2;
@@ -507,20 +555,21 @@ void snake_move_low() {
 				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-			fruitx = 2 + rand() % 15;
-			fruity = 2 + rand() % 15;
-			gotoxy(fruitx, fruity);
-			printf("@");
-			gotoxy(-1, -1);
-			printf("score = %d", score);
+            Coord fruit2xy = fruit();
+            fruity2 = fruit2xy.y;
+            fruitx2 = fruit2xy.x;
+            gotoxy(fruit2xy.x, fruit2xy.y);
+            printf("@");
+            gotoxy(-1, -1);
+            printf("score = %d", score);
 
 		}
-		if ((x1 == fruitx && y1 == fruity) || (x2 == fruitx && y2 == fruity) || (x3 == fruitx && y3 == fruity) || (x4 == fruitx && y4 == fruity)) {
-			fruitx = 2 + rand() % 15;
-			fruity = 2 + rand() % 15;
-			gotoxy(fruitx, fruity);
-			printf("@");
-			gotoxy(-1, -1);
+		if ((x1 == fruitx2 && y1 == fruity2) || (x2 == fruitx2 && y2 == fruity2) || (x3 == fruitx2 && y3 == fruity2) || (x4 == fruitx2 && y4 == fruity2)) {
+            Coord fruit2xy = fruit();
+            fruity2 = fruit2xy.y;
+            fruitx2 = fruit2xy.x;
+            gotoxy(fruit2xy.x, fruit2xy.y);
+            printf("@");
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
@@ -847,6 +896,8 @@ void snake_move_mid() {
 }
 
 void snake_move_high() {
+    score = 0;
+    int last = time(NULL);
 	int x = 11, y = 8;
 	int x1 = 10, y1 = 8;
 	int x2 = 9, y2 = 8;
@@ -854,17 +905,50 @@ void snake_move_high() {
 	int x4 = 7, y4 = 8;
 	char dir = 'd';
 	char input = 'e';
+    gotoxy(-1, -1);
+    printf("score = %d", score);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
-		srand(time(NULL));
-		if (x == fruitx && y == fruity) {  // If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
-			fruitx = 2 + rand() % 15;
-			fruity = 2 + rand() % 15;
-			score += 1;
-			gotoxy(fruitx, fruity);
-			printf("@");
+        srand(time(NULL));
+           if (x == fruitx1 && y == fruity1) {
+              int cur = time(NULL);
+              if (cur - last <= 1.2) {
+                 fruitsound();
+                 soundcount++;
+                 score *= 2;
+              }
+              else if (cur - last <= 1.7) {
+                 score += 20;
+                 soundcount = 0;
+                 fruitsound();
+              }
+              else if (cur - last <= 2) {
+                 score += 15;
+                 soundcount = 0;
+                 fruitsound();
+              }
+              else {
+                 score += 10;
+                 soundcount = 0;
+                 fruitsound();
+              }
+              time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+              Coord fruit1xy = fruit();
+              fruity1 = fruit1xy.y;
+              fruitx1 = fruit1xy.x;
+              gotoxy(fruit1xy.x, fruit1xy.y);
+              printf("@");
+              gotoxy(-1, -1);
+              printf("score = %d", score);
 
-		}
+           }
+           if ((x1 == fruitx1 && y1 == fruity1) || (x2 == fruitx1 && y2 == fruity1) || (x3 == fruitx1 && y3 == fruity1) || (x4 == fruitx1 && y4 == fruity1)) {
+              Coord fruit1xy = fruit();
+              fruitx1 = fruit1xy.x;
+              fruity1 = fruit1xy.y;
+              gotoxy(fruitx1, fruity1);
+              printf("@");
+           }
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
