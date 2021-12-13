@@ -446,7 +446,7 @@ select:
 }
 
 void rankrecord() {
-	FILE* rank;
+	FILE* rank = NULL;
 	if (difficulty == 3) {
 		if ((rank = fopen("rankH.txt", "r")) == NULL)		//if there's not rank.txt file, it will create the file.
 		{
@@ -459,7 +459,7 @@ void rankrecord() {
 			rank = fopen("rankM.txt", "w+");
 		}
 	}
-	else {
+	else if (difficulty == 1) {
 		if ((rank = fopen("rankL.txt", "r")) == NULL)
 		{
 			rank = fopen("rankL.txt", "w+");
@@ -510,11 +510,13 @@ void rankrecord() {
 	}
 	pre = first;
 	cur = first->next;
+	int i = 0;
 	while (cur != NULL) {
 		pre = cur;
 		cur = cur->next;
+		i++;
 	}
-	if (pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
+	if (i < 10 || pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
 		char input;
 	re:
 		printf("you are in top 10. Do you wanna record your record? if so, press 'y'. if not press 'n'\n");		//from here, TUI strating.
@@ -624,7 +626,7 @@ start:
 			cursor(0);
 			make_stage_high();
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
-			Sleep(1);
+			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_high, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
@@ -634,6 +636,7 @@ start:
 			cursor(0);
 			make_stage_mid();
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
@@ -643,7 +646,7 @@ start:
 			cursor(0);
 			make_stage_low();
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
-			Sleep(1);
+			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
@@ -685,6 +688,7 @@ void gameover() {
 	cursor(1);
 	nowrec.score = score;
 	rankrecord();
+	difficulty = 0;
 	printf("press any key to back to title...");
 	_getch();
 	startscr();
