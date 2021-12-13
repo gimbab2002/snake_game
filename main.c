@@ -237,6 +237,7 @@ void wall(int x, int y) {
 }
 
 void make_stage_low() {
+	Beep(C4, 500);
 	//Drawing the snake in this function
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
@@ -289,6 +290,7 @@ void make_stage_low() {
 }
 
 void make_stage_mid() {
+	Beep(C4, 500);
 	int x = 9, y = 9;
 	int x1 = 8, y1 = 9;
 	int x2 = 7, y2 = 9;
@@ -327,6 +329,7 @@ void make_stage_mid() {
 }
 
 void make_stage_high() {
+	Beep(C4, 500);
 	int x = 11, y = 8;
 	int x1 = 10, y1 = 8;
 	int x2 = 9, y2 = 8;
