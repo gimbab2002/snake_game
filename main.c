@@ -182,6 +182,9 @@ void wall(int x, int y);                //장애물
 Coord fruit();
 bool isWall(Coord coord);
 void fruitsound();			//fruit을 빨리 먹으면 소리 출력
+void FruitColorOutput();
+void ScoreColorOutput();
+void ordinalnum(int num);
 int main(void) {
 	startscr();
 	return 0;
@@ -233,8 +236,10 @@ void gotoxy(int x, int y) {
 }
 
 void wall(int x, int y) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
 	gotoxy(x, y);
 	printf("#");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 void make_stage_low() {
@@ -256,6 +261,7 @@ void make_stage_low() {
 	gotoxy(x4, y4);
 	printf("*");
 	for (int i = 1; i <= 17; i++) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
 		gotoxy(i, 1);
 		printf("#");
 		gotoxy(1, i);
@@ -283,11 +289,12 @@ void make_stage_low() {
 	printf("# # #");
 	gotoxy(11, 14);
 	printf("# # #");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	Coord fruit2xy = fruit();
 	fruity2 = fruit2xy.y;
 	fruitx2 = fruit2xy.x;
 	gotoxy(fruitx2, fruity2);   // Feeding 2+rand()%15 into gotoxy
-	printf("@");
+	FruitColorOutput();
 }
 
 void make_stage_mid() {
@@ -308,6 +315,7 @@ void make_stage_mid() {
 	gotoxy(x4, y4);
 	printf("*");
 	for (int i = 1; i <= 17; i++) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
 		gotoxy(i, 1);
 		printf("#");
 		gotoxy(1, i);
@@ -326,7 +334,7 @@ void make_stage_mid() {
 	fruity = fruitxy.y;
 	fruitx = fruitxy.x;
 	gotoxy(fruitx, fruity);   // Feeding 2+rand()%15 into gotoxy
-	printf("@");
+	FruitColorOutput();
 }
 
 void make_stage_high() {
@@ -347,6 +355,7 @@ void make_stage_high() {
 	gotoxy(x4, y4);
 	printf("*");
 	for (int i = 1; i <= 17; i++) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
 		gotoxy(i, 1);
 		printf("#");
 		gotoxy(1, i);
@@ -362,11 +371,12 @@ void make_stage_high() {
 	wall(11, 11); wall(12, 11); wall(13, 11); wall(12, 10);  wall(15, 9); wall(15, 10); wall(15, 11); wall(15, 12); wall(3, 12);  wall(4, 12);
 	wall(5, 12); wall(6, 12); wall(4, 13); wall(4, 14); wall(9, 13); wall(2, 15); wall(2, 16); wall(7, 15); wall(8, 15); wall(9, 15);
 	wall(12, 13); wall(12, 14); wall(12, 15); wall(14, 14); wall(15, 14); wall(16, 14); wall(5, 16);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	Coord fruit1xy = fruit();
 	fruity1 = fruit1xy.y;
 	fruitx1 = fruit1xy.x;
 	gotoxy(fruitx1, fruity1);   // Feeding 2+rand()%15 into gotoxy
-	printf("@");
+	FruitColorOutput();
 }
 
 void cursor(int i) {
@@ -394,9 +404,12 @@ select:
 		else {
 			printf("\n");
 
+			int num = 1;
 			while (fscanf(rankH, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
-				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				ordinalnum(num);
+				printf(">>%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
 				Sleep(1000);
+				num++;
 			}
 			fclose(rankH);
 			printf("\n");
@@ -409,9 +422,12 @@ select:
 		else {
 			printf("\n");
 
+			int num = 1;
 			while (fscanf(rankM, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
-				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				ordinalnum(num);
+				printf(">>%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
 				Sleep(1000);
+				num++;
 			}
 			fclose(rankM);
 			printf("\n");
@@ -424,9 +440,12 @@ select:
 		else {
 			printf("\n");
 
+			int num = 1;
 			while (fscanf(rankL, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
-				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				ordinalnum(num);
+				printf(">>%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
 				Sleep(1000);
+				num++;
 			}
 			fclose(rankL);
 			printf("\n");
@@ -718,7 +737,7 @@ void snake_move_low() {
 	char dir = 'd';
 	char input = 'e';
 	gotoxy(-1, -1);
-	printf("score = %d", score);
+	ScoreColorOutput();
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 
@@ -750,9 +769,9 @@ void snake_move_low() {
 			fruity2 = fruit2xy.y;
 			fruitx2 = fruit2xy.x;
 			gotoxy(fruit2xy.x, fruit2xy.y);
-			printf("@");
+			FruitColorOutput();
 			gotoxy(-1, -1);
-			printf("score = %d", score);
+			ScoreColorOutput();
 
 		}
 		if ((x1 == fruitx2 && y1 == fruity2) || (x2 == fruitx2 && y2 == fruity2) || (x3 == fruitx2 && y3 == fruity2) || (x4 == fruitx2 && y4 == fruity2)) {
@@ -760,7 +779,7 @@ void snake_move_low() {
 			fruity2 = fruit2xy.y;
 			fruitx2 = fruit2xy.x;
 			gotoxy(fruit2xy.x, fruit2xy.y);
-			printf("@");
+			FruitColorOutput();
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
@@ -840,7 +859,7 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
-				if ((x == 4 && y == 4) || (x == 5 && y == 4) || (x == 5 && y == 10) || (x == 6 && y == 11) || (x == 9 && y == 5) ||
+				if ((x == 4 && y == 4) || (x == 5 && y == 4) || (x == 5 && y == 10) || (x == 6 && y == 10) || (x == 9 && y == 5) ||
 					(x == 10 && y == 5) || (x == 11 && y == 13) || (x == 12 && y == 13) || (x == 13 && y == 13)) {
 					gameover();
 					break;
@@ -911,7 +930,7 @@ void snake_move_mid() {
 	char dir = 'd';
 	char input = 'e';
 	gotoxy(-1, -1);
-	printf("score = %d", score);
+	ScoreColorOutput();
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
@@ -945,9 +964,9 @@ void snake_move_mid() {
 			fruity = fruitxy.y;
 			fruitx = fruitxy.x;
 			gotoxy(fruitxy.x, fruitxy.y);
-			printf("@");
+			FruitColorOutput();
 			gotoxy(-1, -1);
-			printf("score = %d", score);
+			ScoreColorOutput();
 
 		}
 		for (int j = 1; j <= i; j++) {
@@ -956,7 +975,7 @@ void snake_move_mid() {
 				fruitx = fruitxy.x;
 				fruity = fruitxy.y;
 				gotoxy(fruitx, fruity);
-				printf("@");
+				FruitColorOutput();
 			}
 		}
 		input = _getch();
@@ -1110,7 +1129,7 @@ void snake_move_high() {
 	char dir = 'd';
 	char input = 'e';
 	gotoxy(-1, -1);
-	printf("score = %d", score);
+	ScoreColorOutput();
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
@@ -1141,17 +1160,16 @@ void snake_move_high() {
 			fruity1 = fruit1xy.y;
 			fruitx1 = fruit1xy.x;
 			gotoxy(fruit1xy.x, fruit1xy.y);
-			printf("@");
+			FruitColorOutput();
 			gotoxy(-1, -1);
-			printf("score = %d", score);
-
+			ScoreColorOutput();
 		}
 		if ((x1 == fruitx1 && y1 == fruity1) || (x2 == fruitx1 && y2 == fruity1) || (x3 == fruitx1 && y3 == fruity1) || (x4 == fruitx1 && y4 == fruity1)) {
 			Coord fruit1xy = fruit();
 			fruitx1 = fruit1xy.x;
 			fruity1 = fruit1xy.y;
 			gotoxy(fruitx1, fruity1);
-			printf("@");
+			FruitColorOutput();
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
@@ -1312,9 +1330,10 @@ void stopwatch() {
 		n = clock();
 		cursor(0);
 		gotoxy(14, 0);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 		printf(" %d : %d", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 		Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100);
-
 	}
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
@@ -1331,6 +1350,29 @@ void fruitsound()
 	case 4: Beep(G4, 250); break;
 	case 5: Beep(A4, 250); break;
 	default: Beep(B4, 250); break;
+	}
+}
+void FruitColorOutput() {
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+	printf("@");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+}
+
+void ScoreColorOutput()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+	printf("score = %d", score);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+}
+
+void ordinalnum(int num)
+{
+	switch (num) {
+	case 1: printf("%dst\n", num); break;
+	case 2: printf("%dnd\n", num); break;
+	case 3: printf("%drd\n", num); break;
+	default: printf("%dth\n", num); break;
 	}
 }
 
