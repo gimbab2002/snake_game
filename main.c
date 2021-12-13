@@ -17,7 +17,7 @@
 #define A4 440.0000
 #define B4 493.8833
 int soundcount = 0;
-
+int difficulty;
 
 int height = 17, width = 17;  //dimensions of out field
 typedef struct RECORD {
@@ -168,7 +168,6 @@ void gotoxy(int x, int y);          //입력 위치 설정
 void make_stage_low();                  //스테이지하 구현
 void make_stage_mid();                  //스테이지중 구현
 void make_stage_high();                 //스테이지상 구현
-int getCommand();                   //키보드 입력
 void gameover();            //게임오버 화면
 void startscr();                    //시작 화면
 void snake_move_low();                  //뱀의 움직임
@@ -366,13 +365,6 @@ void make_stage_high() {
 	printf("@");
 }
 
-int getCommand() {
-	if (_kbhit()) {
-		return _getch();
-	}
-	return -1;
-}
-
 void cursor(int i) {
 	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
 	cursorInfo.dwSize = 1;
@@ -381,27 +373,87 @@ void cursor(int i) {
 }
 
 void rank_call() {
-	FILE* rank;
 	record reading;
-	if (fopen_s(&rank, "rank.txt", "r") != 0) printf("no record\n");
-	else {
-		printf("\n");
 
-		while (fscanf(rank, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
-			printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
-			Sleep(1000);
+select:
+	system("cls");
+	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
+	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
+	printf("   ******   *  *  *     *****    ****    ******           *  ***    *****     *  *  *  *   ******   \n");
+	printf("        *   *   * *    *     *   *   *   *                *    *   *     *   *    **    *  *        \n");
+	printf("   ******   *    **   *       *  *    *  ******           ******  *       *  *    **    *  ******   \n");
+	printf("\nselect the level\n\nhigh->press h\n\nmiddle->press m\n\nlow->press l\n");
+	char lev = _getch();
+	if (lev == 'h') {
+		FILE* rankH;
+		if (fopen_s(&rankH, "rankH.txt", "r") != 0) printf("no record\n");
+		else {
+			printf("\n");
+
+			while (fscanf(rankH, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
+				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				Sleep(1000);
+			}
+			fclose(rankH);
+			printf("\n");
 		}
-		fclose(rank);
-		printf("\n");
+	}
+	else if (lev == 'm') {
+		FILE* rankM;
+		if (fopen_s(&rankM, "rankM.txt", "r") != 0) printf("no record\n");
+		else {
+			printf("\n");
+
+			while (fscanf(rankM, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
+				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				Sleep(1000);
+			}
+			fclose(rankM);
+			printf("\n");
+		}
+	}
+	else if (lev == 'l') {
+		FILE* rankL;
+		if (fopen_s(&rankL, "rankL.txt", "r") != 0) printf("no record\n");
+		else {
+			printf("\n");
+
+			while (fscanf(rankL, "%s %d %d : %d\n", reading.name, &reading.score, &reading.minute, &reading.sec) != EOF) {
+				printf("%s\nscore>> %d\ntime>> %d : %d\n\n", reading.name, reading.score, reading.minute, reading.sec);
+				Sleep(1000);
+			}
+			fclose(rankL);
+			printf("\n");
+		}
+	}
+	else {
+		printf("wrong selection\n");
+		printf("press enter to continue...");
+		while (getchar() != '\n');
+		goto select;
 	}
 
 }
 
 void rankrecord() {
 	FILE* rank;
-	if ((rank = fopen("rank.txt", "r")) == NULL)		//if there's not rank.txt file, it will create the file.
-	{
-		rank = fopen("rank.txt", "w+");
+	if (difficulty == 3) {
+		if ((rank = fopen("rankH.txt", "r")) == NULL)		//if there's not rank.txt file, it will create the file.
+		{
+			rank = fopen("rankH.txt", "w+");
+		}
+	}
+	else if (difficulty == 2) {
+		if ((rank = fopen("rankM.txt", "r")) == NULL)
+		{
+			rank = fopen("rankM.txt", "w+");
+		}
+	}
+	else {
+		if ((rank = fopen("rankL.txt", "r")) == NULL)
+		{
+			rank = fopen("rankL.txt", "w+");
+		}
 	}
 	printf("\npress enter to proceed...\n");
 	while (getchar() != '\n');
@@ -483,7 +535,10 @@ void rankrecord() {
 			goto re;
 		}
 		fclose(rank);
-		rank = fopen("rank.txt", "w");
+		if (difficulty == 3) rank = fopen("rankH.txt", "w");
+		else if (difficulty == 2) rank = fopen("rankM.txt", "w");
+		else rank = fopen("rankL.txt", "w");
+
 		rec = (record*)malloc(sizeof(record));				//rank record start
 		strcpy(rec->name, nowrec.name);
 		rec->score = nowrec.score;
@@ -554,6 +609,7 @@ start:
 		printf("\nselect the level\n\nhigh->press h\n\nmiddle->press m\n\nlow->press l\n");
 		char lev = _getch();
 		if (lev == 'h') {
+			difficulty = 3;
 			system("cls");
 			cursor(0);
 			make_stage_high();
@@ -563,6 +619,7 @@ start:
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'm') {
+			difficulty = 2;
 			system("cls");
 			cursor(0);
 			make_stage_mid();
@@ -571,6 +628,7 @@ start:
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'l') {
+			difficulty = 1;
 			system("cls");
 			cursor(0);
 			make_stage_low();
