@@ -538,31 +538,43 @@ void rankrecord() {
 	if (i < 10 || pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
 		char input;
 	re:
+		gotoxy(-15, 8);
 		printf("you are in top 10. Do you wanna record your record? if so, press 'y'. if not press 'n'\n");		//from here, TUI strating.
 		input = _getch();
 		if (input == 'y') {
 		rerun:
+			gotoxy(-15, 10);
+			printf("\r                                                                                   \r");
 			printf("enter your name: ");
 			gets_s(nowrec.name, sizeof(nowrec.name));
 			if (strlen(nowrec.name) < 3) {
-				printf("name must be at least 3 words...\n\n");
+				printf("name must be at least 3 words...");
+				Sleep(1000);
+				printf("\r                                  \r");
 				goto rerun;
 			}
 			while (1) {
-				printf("your name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
+				printf("\n\nyour name is %s.\nyour score is %d.\nyour clear time is %d : %d.\n\n", nowrec.name, nowrec.score, nowrec.minute, nowrec.sec);
 				printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
+			in:
 				input = _getch();
 				if (input == 'n') goto rerun;
 				else if (input == 'y') break;
-				else printf("wrong input\n\n");
+				else {
+					printf("wrong input");
+					Sleep(1000);
+					printf("\r              \r");
+					goto in;
+				}
 			}
 		}
 		else if (input == 'n') {
 			return;
 		}
 		else {
-			printf("Wrong input. Press any key to try again\n\n");
-			_kbhit();
+			printf("Wrong input. Try again");
+			Sleep(1000);
+			printf("\r                                       \r");
 			goto re;
 		}
 		fclose(rank);
@@ -704,7 +716,7 @@ void gameover() {
 	printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         \n");
 	printf("        *    *   *     *   *    **    *  *                *    *     * *     *        *    *        \n");
 	printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
-	cursor(1);
+	cursor(0);
 	nowrec.score = score;
 	rankrecord();
 	difficulty = 0;
@@ -1320,8 +1332,8 @@ void stopwatch() {
 		gotoxy(14, 0);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 		printf(" %d : %d", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-		Sleep(1000);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+		Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100);
 	}
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
@@ -1363,3 +1375,4 @@ void ordinalnum(int num)
 	default: printf("%dth\n", num); break;
 	}
 }
+
