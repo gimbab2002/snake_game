@@ -7,6 +7,7 @@
 #include<process.h>
 #include<stdbool.h>
 #include<string.h>
+#define ESC 27
 #define A3 220.0000
 #define B3 246.9417
 #define C4 261.6256
@@ -173,7 +174,7 @@ void startscr();                    //시작 화면
 void snake_move_low();                  //뱀의 움직임
 void snake_move_mid();                  //뱀의 움직임
 void snake_move_high();                 //뱀의 움직임
-void rank_call();					//랭킹 표시
+int rank_call();					//랭킹 표시
 void rankrecord();                  //랭킹 기록
 void cursor(int i);             //커서 상태 변경
 void stopwatch();               //스톱워치 보여주기
@@ -375,7 +376,7 @@ void cursor(int i) {
 	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
-void rank_call() {
+int rank_call() {
 	record reading;
 
 select:
@@ -400,6 +401,7 @@ select:
 			fclose(rankH);
 			printf("\n");
 		}
+		return 1;
 	}
 	else if (lev == 'm') {
 		FILE* rankM;
@@ -414,6 +416,7 @@ select:
 			fclose(rankM);
 			printf("\n");
 		}
+		return 1;
 	}
 	else if (lev == 'l') {
 		FILE* rankL;
@@ -428,6 +431,10 @@ select:
 			fclose(rankL);
 			printf("\n");
 		}
+		return 1;
+	}
+	else if (lev == ESC) {
+		return 0;
 	}
 	else {
 		printf("wrong selection\n");
@@ -616,9 +623,9 @@ start:
 			system("cls");
 			cursor(0);
 			make_stage_high();
-			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_high, NULL, 0, NULL);
+			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_high, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'm') {
@@ -626,8 +633,8 @@ start:
 			system("cls");
 			cursor(0);
 			make_stage_mid();
-			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
+			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
 		}
 		if (lev == 'l') {
@@ -635,10 +642,13 @@ start:
 			system("cls");
 			cursor(0);
 			make_stage_low();
-			HANDLE thread1 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
+			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(1);
-			HANDLE thread2 = _beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
+			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
+		}
+		if (lev == ESC) {
+			goto start;
 		}
 		else {
 			printf("wrong selection\n");
@@ -648,7 +658,7 @@ start:
 		}
 	}
 	else if (input == 'r') {
-		rank_call();
+		if (rank_call() == 0)goto start;
 		printf("press enter to continue...");
 		while (getchar() != '\n');
 		goto start;
