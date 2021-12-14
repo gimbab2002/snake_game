@@ -730,8 +730,8 @@ void snake_move_low() {
 	score = 0;
 	int last = time(NULL);
 	int i = 4;
-	int x[9];
-	int y[9];
+	int x[100];
+	int y[100];
 	x[0] = 9;
 	y[0] = 9;
 	x[1] = 8;
@@ -750,7 +750,7 @@ void snake_move_low() {
 	while (1) {
 		srand(time(NULL));
 		if (x[0] == fruitx2 && y[0] == fruity2) {
-			if (i <= 9) {
+			if (i <= 100) {
 				i++;
 			}
 			int cur = time(NULL);
@@ -927,8 +927,8 @@ void snake_move_mid() {
 	score = 0;
 	int last = time(NULL);
 	int i = 4;
-	int x[9];
-	int y[9];
+	int x[100];
+	int y[100];
 	x[0] = 9;
 	y[0] = 9;
 	x[1] = 8;
@@ -947,7 +947,7 @@ void snake_move_mid() {
 	while (1) {
 		srand(time(NULL));
 		if (x[0] == fruitx && y[0] == fruity) {
-			if (i <= 9) {
+			if (i <= 100) {
 				i++;
 			}
 			int cur = time(NULL);
@@ -1134,8 +1134,8 @@ void snake_move_high() {
 	score = 0;
 	int last = time(NULL);
 	int i = 4;
-	int x[9];
-	int y[9];
+	int x[100];
+	int y[100];
 	x[0] = 11;
 	y[0] = 8;
 	x[1] = 10;
@@ -1154,7 +1154,7 @@ void snake_move_high() {
 	while (1) {
 		srand(time(NULL));
 		if (x[0] == fruitx1 && y[0] == fruity1) {
-			if (i <= 9) {
+			if (i <= 100) {
 				i++;
 			}
 			int cur = time(NULL);
