@@ -20,6 +20,9 @@
 int soundcount = 0;
 int difficulty;
 
+CRITICAL_SECTION cr;
+
+
 int height = 17, width = 17;  //dimensions of out field
 typedef struct RECORD {
 	char name[100];
@@ -657,30 +660,36 @@ start:
 			system("cls");
 			cursor(0);
 			make_stage_high();
+			InitializeCriticalSection(&cr);
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_high, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
+			DeleteCriticalSection(&cr);
 		}
 		if (lev == 'm') {
 			difficulty = 2;
 			system("cls");
 			cursor(0);
 			make_stage_mid();
+			InitializeCriticalSection(&cr);
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_mid, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
+			DeleteCriticalSection(&cr);
 		}
 		if (lev == 'l') {
 			difficulty = 1;
 			system("cls");
 			cursor(0);
 			make_stage_low();
+			InitializeCriticalSection(&cr);
 			HANDLE thread1 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)stopwatch, NULL, 0, NULL);
 			Sleep(100);
 			HANDLE thread2 = (uintptr_t*)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)snake_move_low, NULL, 0, NULL);
 			WaitForSingleObject(thread2, INFINITE);
+			DeleteCriticalSection(&cr);
 		}
 		if (lev == ESC) {
 			goto start;
@@ -745,8 +754,10 @@ void snake_move_low() {
 	y[4] = 9;
 	char dir = 'd';
 	char input = 'e';
+	EnterCriticalSection(&cr);
 	gotoxy(-1, -1);
 	ScoreColorOutput();
+	LeaveCriticalSection(&cr);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
@@ -776,6 +787,7 @@ void snake_move_low() {
 				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			EnterCriticalSection(&cr);
 			Coord fruit2xy = fruit();
 			fruity2 = fruit2xy.y;
 			fruitx2 = fruit2xy.x;
@@ -783,22 +795,26 @@ void snake_move_low() {
 			FruitColorOutput();
 			gotoxy(-1, -1);
 			ScoreColorOutput();
-
+			LeaveCriticalSection(&cr);
 		}
 		for (int j = 1; j <= i; j++) {
 			if (x[j] == fruitx2 && y[j] == fruity2) {
+				EnterCriticalSection(&cr);
 				Coord fruit2xy = fruit();
 				fruity2 = fruit2xy.y;
 				fruitx2 = fruit2xy.x;
 				gotoxy(fruit2xy.x, fruit2xy.y);
 				FruitColorOutput();
+				LeaveCriticalSection(&cr);
 			}
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -819,17 +835,23 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'w';
 			}
 			if (input == 'a') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -850,17 +872,23 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'a';
 			}
 			if (input == 's') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -881,17 +909,24 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 's';
 			}
 			if (input == 'd') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
+
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -912,11 +947,15 @@ void snake_move_low() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'd';
 			}
@@ -942,8 +981,10 @@ void snake_move_mid() {
 	y[4] = 9;
 	char dir = 'd';
 	char input = 'e';
+	EnterCriticalSection(&cr);
 	gotoxy(-1, -1);
 	ScoreColorOutput();
+	LeaveCriticalSection(&cr);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
@@ -973,6 +1014,7 @@ void snake_move_mid() {
 				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			EnterCriticalSection(&cr);
 			Coord fruitxy = fruit();
 			fruity = fruitxy.y;
 			fruitx = fruitxy.x;
@@ -980,22 +1022,27 @@ void snake_move_mid() {
 			FruitColorOutput();
 			gotoxy(-1, -1);
 			ScoreColorOutput();
+			LeaveCriticalSection(&cr);
 
 		}
 		for (int j = 1; j <= i; j++) {
 			if (x[j] == fruitx && y[j] == fruity) {
+				EnterCriticalSection(&cr);
 				Coord fruitxy = fruit();
 				fruitx = fruitxy.x;
 				fruity = fruitxy.y;
 				gotoxy(fruitx, fruity);
 				FruitColorOutput();
+				LeaveCriticalSection(&cr);
 			}
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1018,17 +1065,23 @@ void snake_move_mid() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'w';
 			}
 			if (input == 'a') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1052,17 +1105,23 @@ void snake_move_mid() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'a';
 			}
 			if (input == 's') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1085,17 +1144,23 @@ void snake_move_mid() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 's';
 			}
 			if (input == 'd') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1119,11 +1184,15 @@ void snake_move_mid() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'd';
 			}
@@ -1149,8 +1218,10 @@ void snake_move_high() {
 	y[4] = 8;
 	char dir = 'd';
 	char input = 'e';
+	EnterCriticalSection(&cr);
 	gotoxy(-1, -1);
 	ScoreColorOutput();
+	LeaveCriticalSection(&cr);
 	//Deleted the drawing since it's already drawn in the make_stage function
 	while (1) {
 		srand(time(NULL));
@@ -1180,6 +1251,7 @@ void snake_move_high() {
 				fruitsound();
 			}
 			time(&last);// If the snake's head reaches the coordinates of the fruit then make it appear in a random spot and increase the score by 1.
+			EnterCriticalSection(&cr);
 			Coord fruit1xy = fruit();
 			fruity1 = fruit1xy.y;
 			fruitx1 = fruit1xy.x;
@@ -1187,21 +1259,26 @@ void snake_move_high() {
 			FruitColorOutput();
 			gotoxy(-1, -1);
 			ScoreColorOutput();
+			LeaveCriticalSection(&cr);
 		}
 		for (int j = 1; j <= i; j++) {
 			if (x[j] == fruitx1 && y[j] == fruity1) {
+				EnterCriticalSection(&cr);
 				Coord fruitxy = fruit();
 				fruitx1 = fruitxy.x;
 				fruity1 = fruitxy.y;
 				gotoxy(fruitx1, fruity1);
 				FruitColorOutput();
+				LeaveCriticalSection(&cr);
 			}
 		}
 		input = _getch();
 		if ((dir == 'w' && input != 's') || (dir == 'a' && input != 'd') || (dir == 's' && input != 'w') || (dir == 'd' && input != 'a')) {
 			if (input == 'w') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1228,17 +1305,23 @@ void snake_move_high() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'w';
 			}
 			if (input == 'a') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1264,17 +1347,24 @@ void snake_move_high() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'a';
 			}
 			if (input == 's') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
+
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1301,17 +1391,25 @@ void snake_move_high() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
+
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 's';
 			}
 			if (input == 'd') {
+				EnterCriticalSection(&cr);
 				gotoxy(x[i], y[i]);
 				printf(" ");
+				LeaveCriticalSection(&cr);
+
 				for (int j = i; j >= 1; j--) {
 					x[j] = x[j - 1];
 					y[j] = y[j - 1];
@@ -1337,11 +1435,15 @@ void snake_move_high() {
 					gameover();
 					break;
 				}
+				EnterCriticalSection(&cr);
 				gotoxy(x[0], y[0]);
 				printf("a");
+				LeaveCriticalSection(&cr);
 				for (int j = 1; j <= i; j++) {
+					EnterCriticalSection(&cr);
 					gotoxy(x[j], y[j]);
 					printf("*");
+					LeaveCriticalSection(&cr);
 				}
 				dir = 'd';
 			}
@@ -1352,14 +1454,17 @@ void snake_move_high() {
 void stopwatch() {
 	clock_t s, n;
 	s = clock();
+
 	while (over != 1) {
+		EnterCriticalSection(&cr);
 		n = clock();
 		cursor(0);
 		gotoxy(14, 0);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
 		printf(" %d : %02d", ((n - s) / 1000) / 60, ((n - s) / 1000) % 60);
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-		Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100); Sleep(100);
+		LeaveCriticalSection(&cr);
+		Sleep(1000);
 	}
 	nowrec.minute = ((n - s) / 1000) / 60;
 	nowrec.sec = ((n - s) / 1000) % 60;
