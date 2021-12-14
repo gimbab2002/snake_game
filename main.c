@@ -631,6 +631,7 @@ void startscr()
 start:
 
 	over = 0;
+	soundcount = 0;
 	system("cls");
 	printf("   ******   **    *       *      *    *  ******           ******      *        **    **    ******   \n");
 	printf("   *        * *   *      * *     *   *   *                *          * *      *  *  *  *   *        \n");
@@ -757,16 +758,16 @@ void snake_move_low() {
 			if (cur - last <= 1) {
 				score *= 2;
 				fruitsound();
+				fruitsound();
 				soundcount++;
 			}
 			else if (cur - last <= 2) {
 				score += 20;
-				soundcount = 0;
 				fruitsound();
+				soundcount++;
 			}
 			else if (cur - last <= 3) {
 				score += 15;
-				soundcount = 0;
 				fruitsound();
 			}
 			else {
@@ -952,18 +953,18 @@ void snake_move_mid() {
 			}
 			int cur = time(NULL);
 			if (cur - last <= 1) {
+				score *= 2;
+				fruitsound();
 				fruitsound();
 				soundcount++;
-				score *= 2;
 			}
 			else if (cur - last <= 2) {
 				score += 20;
-				soundcount = 0;
 				fruitsound();
+				soundcount++;
 			}
 			else if (cur - last <= 3) {
 				score += 15;
-				soundcount = 0;
 				fruitsound();
 			}
 			else {
@@ -1159,18 +1160,18 @@ void snake_move_high() {
 			}
 			int cur = time(NULL);
 			if (cur - last <= 1) {
+				score *= 2;
+				fruitsound();
 				fruitsound();
 				soundcount++;
-				score *= 2;
 			}
 			else if (cur - last <= 2) {
 				score += 20;
-				soundcount = 0;
 				fruitsound();
+				soundcount++;
 			}
 			else if (cur - last <= 3) {
 				score += 15;
-				soundcount = 0;
 				fruitsound();
 			}
 			else {
@@ -1367,7 +1368,7 @@ void stopwatch() {
 
 void fruitsound()
 {
-	switch (soundcount) {
+	switch (soundcount % 7) {
 	case 0: Beep(C4, 250); break;
 	case 1: Beep(D4, 250); break;
 	case 2: Beep(E4, 250); break;
@@ -1377,6 +1378,7 @@ void fruitsound()
 	default: Beep(B4, 250); break;
 	}
 }
+
 void FruitColorOutput() {
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
