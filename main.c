@@ -754,17 +754,17 @@ void snake_move_low() {
 				i++;
 			}
 			int cur = time(NULL);
-			if (cur - last <= 0.9) {
+			if (cur - last <= 1) {
 				score *= 2;
 				fruitsound();
 				soundcount++;
 			}
-			else if (cur - last <= 1.5) {
+			else if (cur - last <= 2) {
 				score += 20;
 				soundcount = 0;
 				fruitsound();
 			}
-			else if (cur - last <= 1.9) {
+			else if (cur - last <= 3) {
 				score += 15;
 				soundcount = 0;
 				fruitsound();
@@ -951,17 +951,17 @@ void snake_move_mid() {
 				i++;
 			}
 			int cur = time(NULL);
-			if (cur - last <= 0.9) {
+			if (cur - last <= 1) {
 				fruitsound();
 				soundcount++;
 				score *= 2;
 			}
-			else if (cur - last <= 1.5) {
+			else if (cur - last <= 2) {
 				score += 20;
 				soundcount = 0;
 				fruitsound();
 			}
-			else if (cur - last <= 1.9) {
+			else if (cur - last <= 3) {
 				score += 15;
 				soundcount = 0;
 				fruitsound();
@@ -1158,17 +1158,17 @@ void snake_move_high() {
 				i++;
 			}
 			int cur = time(NULL);
-			if (cur - last <= 1.2) {
+			if (cur - last <= 1) {
 				fruitsound();
 				soundcount++;
 				score *= 2;
 			}
-			else if (cur - last <= 1.7) {
+			else if (cur - last <= 2) {
 				score += 20;
 				soundcount = 0;
 				fruitsound();
 			}
-			else if (cur - last <= 2) {
+			else if (cur - last <= 3) {
 				score += 15;
 				soundcount = 0;
 				fruitsound();
