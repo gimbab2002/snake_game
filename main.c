@@ -547,7 +547,7 @@ void rankrecord() {
 		input = _getch();
 		if (input == 'y') {
 		rerun:
-			if (reruncount == 1) {
+			if (reruncount >= 1) {
 				system("cls");
 				printf("\n\n\n\n\n\n\n\n\n\n");
 				printf("        ******      *        **    **    ******            ****   *       *  ******   *****         \n");
