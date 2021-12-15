@@ -538,6 +538,7 @@ void rankrecord() {
 		cur = cur->next;
 		i++;
 	}
+	int reruncount = 0;
 	if (i < 10 || pre->score <= nowrec.score) {				//recognizing whether newrec is in top ten or not by comparing with the smallest score.
 		char input;
 	re:
@@ -546,6 +547,18 @@ void rankrecord() {
 		input = _getch();
 		if (input == 'y') {
 		rerun:
+			if (reruncount == 1) {
+				system("cls");
+				printf("\n\n\n\n\n\n\n\n\n\n");
+				printf("        ******      *        **    **    ******            ****   *       *  ******   *****         \n");
+				printf("        *          * *      *  *  *  *   *                *    *   *     *   *        *    *        \n");
+				printf("        *  ***    *****     *  *  *  *   ******           *    *    *   *    ******   *****         \n");
+				printf("        *    *   *     *   *    **    *  *                *    *     * *     *        *    *        \n");
+				printf("        ******  *       *  *    **    *  ******            ****       *      ******   *     *      \n");
+				printf("\npress enter to proceed...\n");
+				gotoxy(-15, 8);
+				printf("you are in top 10. Do you wanna record your record? if so, press 'y'. if not press 'n'\n");
+			}
 			gotoxy(-15, 10);
 			printf("\r                                                                                   \r");
 			printf("enter your name: ");
@@ -561,7 +574,10 @@ void rankrecord() {
 				printf("if your name is incorrect, press n to correct\nif not, press y to continue...\n\n");
 			in:
 				input = _getch();
-				if (input == 'n') goto rerun;
+				if (input == 'n') {
+					reruncount++;
+					goto rerun;
+				}
 				else if (input == 'y') break;
 				else {
 					printf("wrong input");
