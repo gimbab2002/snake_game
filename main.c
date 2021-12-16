@@ -1249,7 +1249,6 @@ void snake_move_high() {
 			if (cur - last <= 1) {
 				score *= 2;
 				fruitsound();
-				fruitsound();
 				soundcount++;
 			}
 			else if (cur - last <= 2) {
